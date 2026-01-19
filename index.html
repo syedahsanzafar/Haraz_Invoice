@@ -502,6 +502,7 @@
             .sidebar,
             .main-content,
             #sync-status,
+            #connection-status-bar,
             .modal,
             .btn {
                 display: none !important;
@@ -515,6 +516,14 @@
 
 <body>
     <div id="bg-container"></div>
+    <!-- Top Connection Status Bar -->
+    <div id="connection-status-bar"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 5px; z-index: 10002; transition: all 0.3s ease; background: #10b981;">
+        <div id="connection-text"
+            style="display: none; text-align: center; padding: 5px; font-size: 0.8rem; font-weight: bold; color: white;">
+            Online
+        </div>
+    </div>
     <!-- Mobile Menu Toggle Button --><button id="menu-toggle" onclick="toggleMobileMenu()"><i
             class="fas fa-bars"></i></button>
     <!-- Overlay for closing sidebar -->

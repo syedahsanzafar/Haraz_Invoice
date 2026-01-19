@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     renderAll();
 
+    // Online/Offline Status Listeners
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    updateConnectionStatus(); // Initial check
+
+    // Auto-sync on load (Silent)
+    if (navigator.onLine) {
+        loadFromCloud(null, true);
+    }
+
     // Set up item listener for price auto-fill and auto-focus
     const itemInput = document.getElementById('invoice-item-name');
     if (itemInput) {
@@ -87,11 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('invoice-delivery').addEventListener('input', calculateInvoiceTotal);
 });
 
+const SAVE_DEBOUNCE_MS = 2000;
+let saveTimeout = null;
+
 function saveState() {
     localStorage.setItem('haraz_customers', JSON.stringify(state.customers));
     localStorage.setItem('haraz_inventory', JSON.stringify(state.inventory));
     localStorage.setItem('haraz_invoices', JSON.stringify(state.invoices));
     localStorage.setItem('haraz_payments', JSON.stringify(state.payments));
+
+    // Auto-save to cloud (debounced)
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+        if (navigator.onLine) {
+            saveToCloud(null, true);
+        }
+    }, SAVE_DEBOUNCE_MS);
 }
 
 // Navigation Logic
@@ -1066,7 +1087,7 @@ function loadGithubSettings() {
 // Call this on init
 document.addEventListener('DOMContentLoaded', loadGithubSettings);
 
-async function loadFromCloud() {
+async function loadFromCloud(event = null, silent = false) {
     const btn = event ? event.target : null;
     const originalText = btn ? btn.innerHTML : '';
     if (btn) btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading...';
@@ -1097,27 +1118,35 @@ async function loadFromCloud() {
 
         if (data && data.customers && data.invoices) {
             state = data;
-            saveState();
+            // Update local storage without triggering another cloud save loop
+            localStorage.setItem('haraz_customers', JSON.stringify(state.customers));
+            localStorage.setItem('haraz_inventory', JSON.stringify(state.inventory));
+            localStorage.setItem('haraz_invoices', JSON.stringify(state.invoices));
+            localStorage.setItem('haraz_payments', JSON.stringify(state.payments));
+
             renderAll();
-            alert('Database successfully loaded from GitHub!');
+            if (!silent) alert('Database successfully loaded from GitHub!');
             if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i>Cloud: Synced';
         } else {
-            alert('Invalid database format received.');
+            if (!silent) alert('Invalid database format received.');
             if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>Cloud: Error';
         }
 
     } catch (err) {
         console.error(err);
-        alert('Failed to load from cloud: ' + err.message);
+        if (!silent) alert('Failed to load from cloud: ' + err.message);
         if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-times" style="color: #ef4444;"></i>Cloud: Failed';
     } finally {
         if (btn) btn.innerHTML = originalText;
     }
 }
 
-async function saveToCloud() {
+async function saveToCloud(event = null, silent = false) {
     const token = localStorage.getItem('haraz_gh_token');
-    if (!token) return alert('Please save your GitHub Personal Access Token in the System tab first.');
+    if (!token) {
+        if (!silent) alert('Please save your GitHub Personal Access Token in the System tab first.');
+        return;
+    }
 
     const btn = event ? event.target : null;
     const originalText = btn ? btn.innerHTML : '';
@@ -1167,14 +1196,31 @@ async function saveToCloud() {
 
         if (!putResp.ok) throw new Error('Save failed: ' + putResp.statusText);
 
-        alert('Database saved to GitHub successfully!');
+        if (!silent) alert('Database saved to GitHub successfully!');
         if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i>Cloud: Saved';
 
     } catch (err) {
         console.error(err);
-        alert('Cloud Save Error: ' + err.message);
+        if (!silent) alert('Cloud Save Error: ' + err.message);
         if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-times" style="color: #ef4444;"></i>Cloud: Failed';
     } finally {
         if (btn) btn.innerHTML = originalText;
+    }
+}
+
+function updateConnectionStatus() {
+    const statusDiv = document.getElementById('connection-status-bar');
+    const textDiv = document.getElementById('connection-text');
+
+    if (navigator.onLine) {
+        statusDiv.style.background = '#10b981'; // Green
+        statusDiv.style.height = '5px';
+        textDiv.style.display = 'none';
+        textDiv.textContent = 'Online';
+    } else {
+        statusDiv.style.background = '#ef4444'; // Red
+        statusDiv.style.height = '30px';
+        textDiv.style.display = 'block';
+        textDiv.textContent = 'Offline - Changes saved locally only';
     }
 }
