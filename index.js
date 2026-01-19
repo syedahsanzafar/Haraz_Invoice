@@ -1038,3 +1038,143 @@ function emailInvoice(id) {
         alert("The invoice Image has been downloaded/saved to your device.\n\nPlease attach it to the email that just opened.");
     }, 500);
 }
+// GitHub Database Logic
+const GH_OWNER = 'syedahsanzafar';
+const GH_REPO = 'Haraz_Invoice';
+const GH_PATH = 'Haraz_inv_db.json';
+// Note: We use the raw URL for loading without token (if public) or API for authenticated ops
+const GH_RAW_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/main/${GH_PATH}`;
+
+function saveGithubSettings() {
+    const token = document.getElementById('github-token').value;
+    if (token) {
+        localStorage.setItem('haraz_gh_token', token);
+        alert('GitHub Token saved!');
+    } else {
+        alert('Please enter a token');
+    }
+}
+
+function loadGithubSettings() {
+    const token = localStorage.getItem('haraz_gh_token');
+    if (token) {
+        const el = document.getElementById('github-token');
+        if (el) el.value = token;
+    }
+}
+
+// Call this on init
+document.addEventListener('DOMContentLoaded', loadGithubSettings);
+
+async function loadFromCloud() {
+    const btn = event ? event.target : null;
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading...';
+
+    // Update status bar
+    const cloudStatus = document.getElementById('cloud-status-indicator');
+    if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-sync fa-spin" style="color: #3b82f6;"></i>Cloud: Pulling...';
+
+    try {
+        // Try getting from API first (better validation) if token exists, else raw
+        const token = localStorage.getItem('haraz_gh_token');
+        let data;
+
+        if (token) {
+            const response = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`, {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3.raw'
+                }
+            });
+            if (!response.ok) throw new Error('GitHub API Error: ' + response.statusText);
+            data = await response.json();
+        } else {
+            const response = await fetch(GH_RAW_URL);
+            if (!response.ok) throw new Error('Fetch Error: ' + response.statusText);
+            data = await response.json();
+        }
+
+        if (data && data.customers && data.invoices) {
+            state = data;
+            saveState();
+            renderAll();
+            alert('Database successfully loaded from GitHub!');
+            if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i>Cloud: Synced';
+        } else {
+            alert('Invalid database format received.');
+            if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>Cloud: Error';
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert('Failed to load from cloud: ' + err.message);
+        if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-times" style="color: #ef4444;"></i>Cloud: Failed';
+    } finally {
+        if (btn) btn.innerHTML = originalText;
+    }
+}
+
+async function saveToCloud() {
+    const token = localStorage.getItem('haraz_gh_token');
+    if (!token) return alert('Please save your GitHub Personal Access Token in the System tab first.');
+
+    const btn = event ? event.target : null;
+    const originalText = btn ? btn.innerHTML : '';
+    if (btn) btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving...';
+
+    // Update status bar
+    const cloudStatus = document.getElementById('cloud-status-indicator');
+    if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-sync fa-spin" style="color: #3b82f6;"></i>Cloud: Pushing...';
+
+    try {
+        // 1. Get current SHA
+        const getUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+        const getResp = await fetch(getUrl, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+
+        if (!getResp.ok && getResp.status !== 404) throw new Error('Failed to check file status');
+
+        let sha = null;
+        if (getResp.ok) {
+            const fileData = await getResp.json();
+            sha = fileData.sha;
+        }
+
+        // 2. Prepare content (Base64)
+        // btoa works for ASCII. For UTF-8, we need a workaround or valid encoding.
+        // Simple hack for unicode: btoa(unescape(encodeURIComponent(str)))
+        const contentStr = JSON.stringify(state, null, 2);
+        const contentBase64 = btoa(unescape(encodeURIComponent(contentStr)));
+
+        // 3. PUT
+        const putBody = {
+            message: `Update Database: ${new Date().toLocaleString()}`,
+            content: contentBase64,
+            sha: sha // undefined if new file? No, GitHub API requires omission if new, but sending null might fail.
+        };
+        if (sha) putBody.sha = sha;
+
+        const putResp = await fetch(getUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(putBody)
+        });
+
+        if (!putResp.ok) throw new Error('Save failed: ' + putResp.statusText);
+
+        alert('Database saved to GitHub successfully!');
+        if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-check" style="color: #10b981;"></i>Cloud: Saved';
+
+    } catch (err) {
+        console.error(err);
+        alert('Cloud Save Error: ' + err.message);
+        if (cloudStatus) cloudStatus.innerHTML = '<i class="fas fa-times" style="color: #ef4444;"></i>Cloud: Failed';
+    } finally {
+        if (btn) btn.innerHTML = originalText;
+    }
+}
