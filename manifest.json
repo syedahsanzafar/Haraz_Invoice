@@ -1,0 +1,15 @@
+{
+  "name": "Haraz Coffee House Invoice",
+  "short_name": "HarazCMS",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#d1b894",
+  "icons": [
+    {
+      "src": "LOGO.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

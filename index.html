@@ -1,0 +1,928 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haraz Coffee House | Invoice Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo_cinv.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        :root {
+            --primary-color: #d1b894;
+            /* Haraz Coffee Goldish/Coffee tone */
+            --secondary-color: #2c1810;
+            /* Dark Coffee */
+            --accent-color: #e07a5f;
+            --bg-dark: #121212;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --sidebar-width: 280px;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        #bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url(bg.png) center/cover no-repeat;
+            filter: brightness(0.3);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            /* Remove padding to handle header bg */
+            z-index: 10;
+        }
+
+        .brand {
+            padding: 40px 20px;
+            text-align: center;
+            background: url(bg.png) center/cover no-repeat;
+            position: relative;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .brand::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .brand img,
+        .brand h1 {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .brand img {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 0 10px var(--primary-color));
+        }
+
+        .brand h1 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            box-shadow: 0 4px 15px rgba(209, 184, 148, 0.3);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cards & Components */
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(5px);
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(209, 184, 148, 0.1), rgba(44, 24, 16, 0.4));
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        select.form-control option {
+            background-color: var(--secondary-color);
+            color: var(--text-primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(209, 184, 148, 0.4);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Print Invoice Styles */
+        /* Print Invoice Styles */
+        #print-area {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            background: white !important;
+            color: black !important;
+            padding: 40px;
+            width: 800px;
+            /* min-height removed to fit single page */
+            height: auto;
+            font-size: 14pt;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+
+        #print-area * {
+            color: black !important;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .invoice-header img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .invoice-header h2 {
+            margin: 0;
+            font-size: 24pt;
+        }
+
+        .invoice-header p {
+            margin: 5px 0;
+            font-size: 14pt;
+            color: #444;
+        }
+
+        .customer-section {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .dash-separator {
+            border: none;
+            border-top: 2px dashed #000;
+            margin: 15px 0;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .invoice-table th {
+            text-align: left;
+            padding: 10px 5px;
+            border-bottom: 1px solid #000;
+            font-weight: bold;
+        }
+
+        .invoice-table td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-footer {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .invoice-footer p {
+            margin: 10px 0;
+        }
+
+        .grand-total {
+            font-size: 18pt;
+            font-weight: bold;
+            border-top: 2px solid #000;
+            display: inline-block;
+            padding-top: 10px;
+        }
+
+        /* Mobile Menu Styles */
+        #menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2000;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s ease-in-out;
+                width: 250px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            #sidebar-overlay.active {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding-top: 60px;
+                /* Space for toggle button */
+            }
+
+            #menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                display: block !important;
+            }
+
+            /* Hide non-printable elements */
+            .sidebar,
+            .main-content,
+            #sync-status,
+            .modal,
+            .btn {
+                display: none !important;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div id="bg-container"></div>
+    <!-- Mobile Menu Toggle Button --><button id="menu-toggle" onclick="toggleMobileMenu()"><i
+            class="fas fa-bars"></i></button>
+    <!-- Overlay for closing sidebar -->
+    <div id="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+    <aside class="sidebar">
+        <div class="brand">
+            <svg viewBox="0 0 5857.04 2121.18" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
+                style="width: 140px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 0 10px var(--primary-color));">
+                <style type="text/css">
+                    .fil0 {
+                        fill: #CCAD6A
+                    }
+
+                    .fnt0 {
+                        font-weight: normal;
+                        font-size: 533.18px;
+                        font-family: 'Outfit', sans-serif
+                    }
+                </style>
+                <g id="Layer_x0020_1">
+                    <g transform="matrix(1.26976 0 0 1 -3014.64 -1519.68)">
+                        <text x="3515.87" y="3152.24" class="fil0 fnt0">COFFEE HOUSE</text>
+                    </g>
+                    <g id="_2126649038832">
+                        <path class="fil0"
+                            d="M3591.98 358.72c140.77,-11.43 205.66,19.59 204.2,162.85 -1.43,140.13 -69.79,164.34 -204.53,165.68l0.33 -328.52zm-170.85 -82.1c-5.37,19.71 -1.98,367.8 -1.98,419.18 0,139.68 -2.68,282 0.27,421.35l172.36 0.91 -0.1 -347.18 55.28 0.2 71.62 132.39c24.12,44.65 50.72,89.49 79.76,127.74 28.85,38 63.84,75.24 118.83,88.63 42.47,10.34 151.16,11.67 184.37,-7.93 5.3,-12.44 2.28,-36.99 2.07,-53.31 -84.14,-5.33 -128.55,-60.93 -175,-127.17 -12.73,-18.16 -104.7,-164.75 -112.92,-188.58 8.21,-6.93 35.31,-19.36 47.51,-27.22 144.05,-92.86 130.4,-293.96 62.34,-364.67 -106.03,-110.15 -324.5,-84.36 -504.42,-74.3z" />
+                        <path class="fil0"
+                            d="M2036.78 275.45c-9.81,39.29 5.53,342.14 -3.86,369.95l-379.18 0.23c-7.83,-24.3 2,-308.08 -2.66,-369.79l-169.54 -0.39 -0.8 842.93 171.71 0.09 1.1 -378.19 378.81 -0.74 0.49 377.88 172.37 0.98 0.88 -842.44 -169.31 -0.51z" />
+                        <path class="fil0"
+                            d="M2649.4 753.18c6.6,-19.34 121.52,-343.43 131.86,-354.4 6.76,9.04 119.23,328.76 124.99,355.2l-256.85 -0.8zm-240.72 364.86l106.84 0.38 77.48 -209.84c6.55,-17.77 18.21,-55.65 26.4,-70.2l313.97 -3.83c6.2,8.73 88.73,251.16 100.3,283.7l183.44 -0.23c-0.76,-11.84 -70.47,-198.52 -76.16,-214.79l-155.84 -433.35c-10.31,-28.01 -71.83,-206.2 -79.4,-215.78 -47.19,8.19 -94.86,17.66 -143.17,24.73 -27.6,4.04 -20.97,0.08 -39.09,46.68 -8.06,20.74 -16.29,40.2 -24.54,61.2 -29.94,76.26 -289.68,715.09 -290.25,731.33z" />
+                        <path class="fil0"
+                            d="M4532.62 419.76c1.33,-3.64 2.85,-9.26 4.28,-12.35l4.69 -7.15c0.2,-1.01 0.94,-1.11 1.49,-1.59 6.2,9.31 119.8,332.17 124.72,355.31l-256.84 -0.78 121.65 -333.44zm-29.66 -137.32c-14.42,25.9 -29.06,70.35 -41.86,101.96l-209.31 523.74c-11.78,30.07 -80.67,194.22 -81.96,210.03l107.04 0.2c18.94,-39.89 93.57,-262.41 104.27,-280.12l315.53 -3.28 98.19 283.35 184.11 0.22c-2.34,-14.06 -12.28,-37.44 -17.82,-52.51l-293.6 -810.9 -164.59 27.32z" />
+                        <path class="fil0"
+                            d="M5157.32 361.64l388.3 5.17c-2.24,15.12 -93.1,157.79 -108.34,183.45l-111.27 181.71c-33.89,51.8 -76.55,126.99 -111.03,182.12l-82.99 135.68c-10.01,16.99 -8.1,47.87 -4.71,68.21 148.82,2.76 314.45,8.12 461.27,8.17 96.15,0.03 158.72,2.6 228.73,-79.98 12.87,-15.18 33.64,-49.09 39.76,-65.48 -6.43,-8.96 -34.97,-30.44 -41.68,-33.43 -24.05,13.08 -42.56,78.58 -199.11,82.59 -89.07,2.29 -193.26,4.26 -281.69,0.4l386.74 -641.55c10.38,-16.66 18.23,-30.65 28.19,-46.33 10.37,-16.33 9.72,-41.8 7.09,-66.66l-552.47 -0.26c-39.7,0 -33.3,-7.94 -38.68,27.68 -2.81,18.59 -7.43,39.45 -8.12,58.53z" />
+                        <path class="fil0"
+                            d="M2036.78 275.45c-4.74,2.11 -5.78,-3.19 -6.09,19.16 -0.1,7.15 0.29,15.05 0.38,22.29 0.69,54.1 2.79,311.6 -1.55,324.39l-371.5 0.35c-0.38,-1.23 -0.82,-3.03 -0.93,-2.66l-2.29 -39.98c0.07,-88.2 -2.85,-218.99 0.21,-301.59 0.93,-25.18 1.71,-17.58 -3.92,-21.57 4.66,61.71 -5.18,345.49 2.66,369.79l379.18 -0.23c9.39,-27.82 -5.95,-330.67 3.86,-369.95z" />
+                    </g>
+                    <g id="_2126649040560">
+                        <path class="fil0"
+                            d="M957.57 1131.36c-101.7,-265.01 -201.78,-326.7 -356.65,-490.53 -102.32,-108.23 -149.45,-162.35 -202.86,-306.35 -92.88,25.3 -180.78,194.19 -144.96,335.37 28.74,113.26 242.77,370.3 314.75,444.88 92.41,95.74 154.43,166.45 205.76,304.25 39.55,106.18 14.75,146.23 17.64,195.7 1.19,20.33 0.94,14.32 4.61,21.9 196.9,-195.27 23.77,-468.36 -111.99,-632.23l-162.41 -175.91c-67.83,-68.48 -241,-270.79 -155.28,-390.54 19.36,30.78 31.16,88.87 45.85,123.45 54.34,127.91 198.39,244.42 317.78,383.67 56.57,65.98 116.99,119.7 158.52,203.09 21.19,42.56 29.76,91.03 50.75,131.36 74.87,-63.27 137.29,-208.8 131.75,-357.75 -5.15,-138.34 -90.64,-261.49 -149.48,-339.26 -103.72,-137.11 -300.43,-312.4 -361.93,-487.58 -11.65,-33.19 -10.76,-68.55 -27.98,-94.87 -234.53,294.71 383.06,629.84 453.41,952.41 7.04,32.27 8.19,62.3 5.69,95.33l-16.11 62.75c-11.98,20.44 -3.55,8.05 -16.86,20.86z" />
+                        <path class="fil0"
+                            d="M657.33 1890.32c66.69,-51.12 86.54,-257.14 61.72,-356.08 -56.19,-224 -195.79,-320.28 -271.31,-408.92 -68.92,-80.89 -221.84,-218.59 -251.78,-313.53 -24.61,-42.51 -9.34,-58.16 -33.78,-91.97 -66.67,275.26 -26.53,341.41 227.61,570.34 158.04,142.36 254.45,296.48 267.54,600.16z" />
+                        <path class="fil0"
+                            d="M508.87 2121.18c128.75,-152.85 69,-393.05 -26.62,-546.82l-343 -388.5 24.44 255.99c87.27,138.87 290.44,181.49 345.17,679.33z" />
+                        <path class="fil0"
+                            d="M105.32 1375.26l-11.85 -215.08c-0.72,-13.12 -41.13,-58.64 -60.62,-158.03 -87.18,160.41 21.09,314.77 72.48,373.11z" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item"><a class="nav-link active" data-tab="dashboard"><i
+                        class="fas fa-chart-pie"></i>Dashboard </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="invoice"><i class="fas fa-file-invoice-dollar"></i>New
+                    Invoice </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="reports"><i class="fas fa-chart-line"></i>Reports </a>
+            </div>
+            <div class="nav-item"><a class="nav-link" data-tab="payments"><i
+                        class="fas fa-hand-holding-usd"></i>Payments </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="customers"><i class="fas fa-users"></i>Customers
+                </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="inventory"><i class="fas fa-boxes"></i>Inventory
+                </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="system"><i class="fas fa-cogs"></i>System </a>
+            </div>
+        </nav>
+        <div style="font-size: 0.8rem; color: var(--text-secondary); text-align: center;">&copy;
+            2026 Haraz Coffee </div>
+    </aside>
+    <main class="main-content">
+        <!-- Dashboard Tab -->
+        <section id="dashboard" class="tab-pane active">
+            <h2 style="margin-bottom: 20px;">Performance Analytics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-total-sale">$0.00</div>
+                    <div class="stat-label">Total Sales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-total-credit">$0.00</div>
+                    <div class="stat-label">Total Credit</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-customer-count">0</div>
+                    <div class="stat-label">Customers</div>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="card">
+                    <h3>Sales Overview (Bar)</h3>
+                    <div style="height: 300px;"><canvas id="salesBarChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <h3>Payment Status (Pie)</h3>
+                    <div style="height: 300px;"><canvas id="balancePieChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+        <!-- Invoice Tab -->
+        <section id="invoice" class="tab-pane">
+            <h2>Generate New Invoice</h2>
+            <div class="card">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="form-group"><label>Customer Name</label><input type="text" id="invoice-customer-name"
+                            class="form-control" list="customer-list" placeholder="Enter or select name"><datalist
+                            id="customer-list"></datalist>
+                    </div>
+                    <div class="form-group"><label>Customer Phone</label><input type="text" id="invoice-customer-phone"
+                            class="form-control" placeholder="Phone number">
+                    </div>
+                </div>
+                <hr style="opacity: 0.1; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 0.5fr; gap: 15px; align-items: end;">
+                    <div class="form-group"><label>Item Name</label><input type="text" id="invoice-item-name"
+                            class="form-control" list="inventory-items-list"
+                            placeholder="Enter or select item"><datalist id="inventory-items-list"></datalist></div>
+                    <div class="form-group"><label>Qty</label><input type="number" id="invoice-item-qty"
+                            class="form-control" value="1"></div>
+                    <div class="form-group"><label>Price</label><input type="number" id="invoice-item-price"
+                            class="form-control" step="0.01"></div><button class="btn btn-primary"
+                        onclick="addInvoiceItem()" style="height: 45px;"><i class="fas fa-plus"></i></button>
+                </div>
+                <table id="invoice-items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+                    <div style="width: 300px;">
+                        <div class="form-group"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <label>Delivery Charges</label><input type="number" id="invoice-delivery"
+                                class="form-control" value="0" style="width: 100px;">
+                        </div>
+
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 1.5rem; color: var(--primary-color); font-weight: 700;">
+                            <span>Total</span><span id="invoice-total-display">$0.00</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateInvoice()"
+                            style="width: 100%; margin-top: 20px; font-size: 1.1rem;"><i class="fas fa-print"></i>
+                            Print Invoice / Save PDF </button>
+                    </div>
+                </div>
+        </section>
+        <!-- Reports Tab -->
+        <section id="reports" class="tab-pane">
+            <h2>Financial Reports</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="report-total-sale">$0.00</div>
+                    <div class="stat-label">Total Sale</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="report-total-credit">$0.00</div>
+                    <div class="stat-label">Total Credit</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>All Generated Invoices</h3>
+                <table id="all-invoices-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Credit</th>
+                            <th>Action</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Payments Tab -->
+        <section id="payments" class="tab-pane">
+            <h2>Receive Payments</h2>
+            <div class="card">
+                <div class="form-group"><label>Select Customer</label><select id="payment-customer" class="form-control"
+                        onchange="loadCustomerInvoices()">
+                        <option value="">Select Customer</option>
+                    </select></div>
+                <div id="customer-credit-info" style="margin-top: 20px;">
+                    <!-- Loaded dynamically -->
+                </div>
+                <div style="margin-top: 20px; display: none;" id="payment-form">
+                    <div class="form-group"><label>Select Invoice to Pay</label><select id="payment-invoice"
+                            class="form-control"></select></div>
+                    <div class="form-group"><label>Amount to Pay</label><input type="number" id="payment-amount"
+                            class="form-control"></div><button class="btn btn-primary" onclick="processPayment()">Record
+                        Payment</button>
+                </div>
+            </div>
+        </section>
+        <!-- Customers Tab -->
+        <section id="customers" class="tab-pane">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Manage Customers</h2><button class="btn btn-primary" onclick="openCustomerModal()"><i
+                        class="fas fa-plus"></i>Add
+                    Customer</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customers-list-table"></tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Inventory Tab -->
+        <section id="inventory" class="tab-pane">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Inventory Items</h2><button class="btn btn-primary" onclick="openInventoryModal()"><i
+                        class="fas fa-plus"></i>Add
+                    Item</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price ($)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list-table"></tbody>
+                </table>
+            </div>
+        </section>
+        <!-- System Tab -->
+        <section id="system" class="tab-pane">
+            <h2>System & Database</h2>
+            <div class="card">
+                <div style="display: flex; flex-direction: column; gap: 20px; max-width: 400px;">
+                    <div>
+                        <h3>Backup Data</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Download your entire database as a JSON file.</p><button class="btn btn-primary"
+                            onclick="backupDatabase()"><i class="fas fa-download"></i>Save Database </button>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Restore Data</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Upload a previously saved JSON database file.</p><input type="file" id="restore-file"
+                            style="display: none;" onchange="restoreDatabase(event)"><button class="btn btn-primary"
+                            onclick="document.getElementById('restore-file').click()"><i
+                                class="fas fa-upload"></i>Restore from Database
+                        </button>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Cloud Sync</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Sync your data with the cloud.</p>
+                        <div style="display: flex; gap: 10px;"><button class="btn btn-primary"
+                                onclick="loadFromCloud()"><i class="fas fa-cloud-download-alt"></i>Load
+                            </button><button class="btn btn-primary" onclick="saveToCloud()"><i
+                                    class="fas fa-cloud-upload-alt"></i>Save
+                            </button></div>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Danger Zone</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Wipe all data from this browser (Customers, Inventory,
+                            Invoices).</p><button class="btn" style="background: #ef4444; color: white;"
+                            onclick="resetDatabase()"><i class="fas fa-trash-alt"></i>Reset All Data
+                        </button>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Email Settings</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Configure sender credentials for emails.</p>
+                        <div class="form-group"><label>Sender Email</label><input type="email" id="sender-email"
+                                class="form-control" placeholder="your-email@example.com"></div>
+                        <div class="form-group"><label>App Password /
+                                Password</label><input type="password" id="sender-password" class="form-control"
+                                placeholder="App Password"></div><button class="btn btn-primary"
+                            onclick="saveEmailSettings()"><i class="fas fa-save"></i>Save Credentials </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Modals -->
+    <div id="customer-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="customer-modal-title">Add Customer</h3>
+            <div class="form-group"><label>Name</label><input type="text" id="cust-name" class="form-control"></div>
+            <div class="form-group"><label>Phone Number</label><input type="text" id="cust-phone" class="form-control">
+            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="cust-email" class="form-control">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;"><button class="btn"
+                    style="background: #444;" onclick="closeModals()">Cancel</button><button class="btn btn-primary"
+                    id="save-customer-btn">Save</button></div>
+        </div>
+    </div>
+    <div id="inventory-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="inventory-modal-title">Add Item</h3>
+            <div class="form-group"><label>Item Name</label><input type="text" id="item-name" class="form-control">
+            </div>
+            <div class="form-group"><label>Price</label><input type="number" id="item-price" class="form-control">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;"><button class="btn"
+                    style="background: #444;" onclick="closeModals()">Cancel</button><button class="btn btn-primary"
+                    id="save-item-btn">Save</button></div>
+        </div>
+    </div>
+    <!-- Hidden Print Area -->
+    <div id="print-area">
+        <div class="invoice-header" style="margin-bottom: 0px; text-align: center;">
+            <img id="print-logo-img" src="logo_cinv.png" alt="Haraz Coffee House"
+                style="width: 280px; max-width: none; height: auto; display: inline-block;">
+        </div>
+        <div class="customer-section"
+            style="margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; color: #000;">
+            <div>
+                <p style="margin: 5px 0; font-weight: bold;">Client: <span id="print-cust-name">Customer
+                        Name</span></p>
+                <p style="margin: 5px 0;"><span id="print-cust-phone">Customer phone number</span></p>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin: 5px 0; font-weight: bold;">Invoice No: <span id="print-invoice-id">INV-000000</span>
+                </p>
+                <p style="margin: 5px 0;">Date: <span id="print-date">01/01/2026</span></p>
+            </div>
+        </div>
+        <div style="border-top: 2px dashed #000; margin: 15px 0; width: 100%;"></div>
+        <table class="invoice-table" style="color: #000; width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 5%;">
+                        No. </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 45%;">
+                        Name </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 10%;">
+                        Qty. </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 20%;">
+                        Price </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 20%;">
+                        Total </th>
+                </tr>
+            </thead>
+            <tbody id="print-items-body"></tbody>
+        </table>
+        <div class="invoice-footer"
+            style="margin-top: 50px; text-align: right; border-top: 2px dashed #000; padding-top: 20px; color: #000;">
+            <p style="margin: 10px 0;">Delivery Charges : <span id="print-delivery">$0.00</span></p>
+            <div style="font-size: 18pt; font-weight: bold; margin-top: 10px;">Total Payable : <span
+                    id="print-grand-total">$0.00</span></div>
+        </div>
+    </div>
+    <div id="sync-status"
+        style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; display: none; z-index: 10000;">
+        <i class="fas fa-sync fa-spin"></i>Syncing...
+    </div>
+    <script> // PWA Service Worker Registration
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(reg => console.log('Service Worker Registered', reg)).catch(err => console.error('Service Worker Registration Failed', err));
+        }
+
+        // Auto-close menu and trigger full screen when a link is clicked on mobile
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    if (typeof closeMobileMenu === 'function') closeMobileMenu();
+                    if (typeof requestFullScreen === 'function') requestFullScreen();
+                }
+            });
+        });
+    </script>
+    <script src="logo_data.js"></script>
+    <script src="index.js"></script>
+    <!-- Toast Notification Container (Restored/Ensured) -->
+    <div id="sync-status"
+        style="display: none; position: fixed; top: 20px; right: 20px; padding: 10px 20px; border-radius: 5px; color: white; z-index: 10001; font-weight: 500; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    </div>
+    <!-- Persistent Status Bar -->
+    <div id="app-status-bar"
+        style="position: fixed; bottom: 0; left: 0; right: 0; background: #1f2937; border-top: 1px solid #374151; padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; color: #9ca3af; font-size: 0.85rem; z-index: 10000; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; gap: 20px; align-items: center;"><span id="db-status-indicator"
+                style="display: flex; align-items: center; gap: 6px;"><i class="fas fa-database"
+                    style="color: #10b981;"></i>Local Database: Active </span><span style="opacity: 0.2;">|</span><span
+                id="cloud-status-indicator" style="display: flex; align-items: center; gap: 6px;"><i
+                    class="fas fa-cloud" style="color: #6b7280;"></i>Cloud: Idle </span></div>
+        <div style="font-size: 0.75rem; opacity: 0.7;">Haraz Coffee House System v2.1 </div>
+    </div>
+</body>
+
+</html>
