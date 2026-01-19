@@ -1,10 +1,11 @@
-const CACHE_NAME = 'haraz-invoice-v6';
+const CACHE_NAME = 'haraz-invoice-v7';
 const ASSETS = [
   './',
   './index.html',
   './index.css',
   './index.js',
-  './LOGO.svg',
+  './logo_cinv.png',
+  './manifest.json',
   './bg.png'
 ];
 

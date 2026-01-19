@@ -7,9 +7,9 @@
   "theme_color": "#d1b894",
   "icons": [
     {
-      "src": "LOGO.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "logo_cinv.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
     }
   ]
 }
