@@ -599,6 +599,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768943587787,
+      "name": "Haraz 20oz Pet Cups",
+      "category": "Packaging",
+      "stock": 4,
+      "unit": "Boxes",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
