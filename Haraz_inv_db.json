@@ -899,6 +899,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768948309620,
+      "name": "Red bull the yellow edition",
+      "category": "Syrups",
+      "stock": 16,
+      "unit": "Cans",
+      "min": 12,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
