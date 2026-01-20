@@ -155,6 +155,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768937453573,
+      "name": "Hollander White Chocolate sauce",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
