@@ -251,6 +251,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768938142826,
+      "name": "1883 Maison Routin France Strawberry Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
