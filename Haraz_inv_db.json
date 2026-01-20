@@ -455,6 +455,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768939585291,
+      "name": "Clear Pet Container 6x6",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
