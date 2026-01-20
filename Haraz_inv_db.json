@@ -875,6 +875,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768948151189,
+      "name": "Chef Master Purple Gel food color",
+      "category": "Dairy",
+      "stock": 5,
+      "unit": "Bottles",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
