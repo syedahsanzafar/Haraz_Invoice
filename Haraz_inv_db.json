@@ -719,6 +719,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768944142781,
+      "name": "Haraz Evaporated Milk",
+      "category": "Dairy",
+      "stock": 32,
+      "unit": "Boxes",
+      "min": 20,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
