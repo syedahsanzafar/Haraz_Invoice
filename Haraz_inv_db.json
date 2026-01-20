@@ -263,6 +263,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768938217175,
+      "name": "1883 Maison Routin France Sugar Cane Syrup",
+      "category": "Dairy",
+      "stock": 18,
+      "unit": "Bottles",
+      "min": 18,
+      "usageDays": 0,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
