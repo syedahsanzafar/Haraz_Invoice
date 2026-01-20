@@ -479,6 +479,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768940439983,
+      "name": "Paper Bags?",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
