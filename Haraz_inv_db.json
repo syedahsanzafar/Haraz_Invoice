@@ -287,6 +287,18 @@
       "supplier": "Amazon or Haraz Online Store",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768938482971,
+      "name": "Chobani Oatmilk",
+      "category": "Dairy",
+      "stock": 126,
+      "unit": "Carton",
+      "min": 60,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
