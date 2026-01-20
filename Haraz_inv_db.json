@@ -1,5 +1,18 @@
 {
-  "inventory": [],
+  "inventory": [
+    {
+      "id": 1768935688050,
+      "name": "Haraz Insulated Hot Cups 16oz",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 7,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
+    }
+  ],
   "history": [],
   "settings": {
     "budget": 10000,
