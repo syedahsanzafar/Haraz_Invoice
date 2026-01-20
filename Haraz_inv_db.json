@@ -779,6 +779,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768944610043,
+      "name": "Medium Roast Coffee Beans",
+      "category": "Coffee Beans",
+      "stock": 8,
+      "unit": "Bags",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
