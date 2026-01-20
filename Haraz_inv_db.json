@@ -1,1 +1,11 @@
-
+{
+  "inventory": [],
+  "history": [],
+  "settings": {
+    "budget": 1000,
+    "spend": 1110,
+    "threshold": 20,
+    "email": "admin@harazcoffee.com"
+  },
+  "orders": []
+}
