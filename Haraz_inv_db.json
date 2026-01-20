@@ -575,6 +575,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768942010477,
+      "name": "Lids 20oz",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "-",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
