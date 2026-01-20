@@ -491,6 +491,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768940578031,
+      "name": "Handle Shopping Bags medium 41x27",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
