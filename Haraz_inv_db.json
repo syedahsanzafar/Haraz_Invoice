@@ -659,6 +659,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768943920216,
+      "name": "Glamoroso All purpose Cleaner",
+      "category": "Cleaning",
+      "stock": 5,
+      "unit": "Bottles",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
