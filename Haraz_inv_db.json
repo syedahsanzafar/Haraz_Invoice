@@ -119,6 +119,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768937200443,
+      "name": "Kirkland Organic Lemonade",
+      "category": "Dairy",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 3,
+      "usageDays": 150,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
