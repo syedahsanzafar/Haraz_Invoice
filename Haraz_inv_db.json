@@ -131,6 +131,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768937293059,
+      "name": "Hollander Classic Caramel Cafe sauce",
+      "category": "Syrups",
+      "stock": 30,
+      "unit": "Bottles",
+      "min": 10,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
