@@ -695,6 +695,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768944057016,
+      "name": "Trash Can Liners 45 Gallon 40x48",
+      "category": "Dairy",
+      "stock": 1,
+      "unit": "Box",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
