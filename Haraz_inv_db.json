@@ -683,6 +683,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768944006849,
+      "name": "Wet Mops",
+      "category": "Cleaning",
+      "stock": 1,
+      "unit": "Box",
+      "min": 0,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
