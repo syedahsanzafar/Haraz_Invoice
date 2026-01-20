@@ -59,6 +59,18 @@
       "supplier": "Haraz Online Store",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768936101732,
+      "name": "Black 8oz Lids",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "boxes",
+      "min": 1,
+      "usageDays": 15,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
