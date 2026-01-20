@@ -179,6 +179,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768937709436,
+      "name": "1883 Maison Routin France Vanilla Syrup",
+      "category": "Syrups",
+      "stock": 30,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
