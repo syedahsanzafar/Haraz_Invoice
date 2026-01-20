@@ -851,6 +851,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768947527262,
+      "name": "Dispenser Napkins",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
