@@ -945,6 +945,16 @@
                     <label>Admin Notification Email</label>
                     <input type="email" id="setting-email" value="admin@harazcoffee.com" onchange="updateSettings()">
                 </div>
+                <div class="form-group">
+                    <label>GitHub Personal Access Token</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="password" id="setting-github-token" placeholder="ghp_xxxxxxxxxxxx"
+                            style="flex: 1;">
+                        <button class="btn btn-primary" onclick="saveGithubToken()">Save Token</button>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 5px;">Required for syncing with
+                        GitHub. Enter once to enable cloud features.</p>
+                </div>
                 <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 1.5rem 0;">
                 <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
                     <button class="btn btn-primary" onclick="pushToCloud()">
@@ -1556,6 +1566,17 @@
             document.getElementById('setting-budget').value = settings.budget;
             document.getElementById('setting-threshold').value = settings.threshold;
             document.getElementById('setting-email').value = settings.email;
+            document.getElementById('setting-github-token').value = localStorage.getItem('haraz_github_token') || '';
+        }
+
+        function saveGithubToken() {
+            const token = document.getElementById('setting-github-token').value.trim();
+            if (token) {
+                localStorage.setItem('haraz_github_token', token);
+                showToast("GitHub Token saved securely.");
+            } else {
+                showToast("Please enter a valid token.");
+            }
         }
 
         function resetSystem() {
@@ -1654,91 +1675,114 @@
             setTimeout(() => toast.style.display = 'none', 3000);
         }
 
-        // Cloud Configuration (JSONbin.io)
-        const CLOUD_CONFIG = {
-            binId: "6951d797ae596e708fb6f9c8",
-            masterKey: "$2a$10$FAreA8FhhM2chMUDvbLCK.H9pKbBzuArhUryvH1y.u31Sft/hD6NC"
+        // Cloud Configuration (GitHub)
+        const GITHUB_CONFIG = {
+            owner: "syedahsanzafar",
+            repo: "Haraz_Invoice",
+            path: "Haraz_inv_db.json",
+            branch: "main"
         };
 
         async function pushToCloud(silent = false) {
-            if (!silent) showToast("Syncing with Cloud...");
+            const token = localStorage.getItem('haraz_github_token');
+            if (!token) {
+                if (!silent) showToast("Manual Sync: GitHub Token missing in Settings.");
+                return;
+            }
+
+            if (!silent) showToast("Syncing with GitHub...");
             const data = { inventory, history, settings, orders };
-            const url = `https://api.jsonbin.io/v3/b/${CLOUD_CONFIG.binId}`;
+            const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
 
             try {
-                const response = await fetch(url, {
-                    method: 'PUT',
+                // 1. Get current file for SHA
+                const getRes = await fetch(apiUrl, {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': CLOUD_CONFIG.masterKey
-                    },
-                    body: JSON.stringify(data)
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
                 });
 
-                if (response.ok) {
-                    if (!silent) showToast("Database uploaded successfully!");
-                    else console.log("Cloud Push: Success");
+                let sha = "";
+                if (getRes.ok) {
+                    const fileData = await getRes.json();
+                    sha = fileData.sha;
+                }
+
+                // 2. Put new content
+                const putRes = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        message: `System Sync: ${new Date().toLocaleString()}`,
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+                        sha: sha,
+                        branch: GITHUB_CONFIG.branch
+                    })
+                });
+
+                if (putRes.ok) {
+                    if (!silent) showToast("Cloud database updated!");
+                    console.log("GitHub Sync: Success");
                 } else {
-                    const error = await response.json();
-                    console.error("Cloud Error:", error);
-                    if (!silent) showToast("Upload failed: " + (error.message || "Unknown error"));
+                    const err = await putRes.json();
+                    throw new Error(err.message || "GitHub API Error");
                 }
             } catch (err) {
                 console.error("Cloud Error:", err);
-                if (!silent) showToast("Connection error. Check console.");
+                if (!silent) showToast("Cloud Sync Failed: " + err.message);
             }
         }
 
         async function pullFromCloud(silent = false) {
-            if (!silent) {
-                if (!confirm("This will overwrite your current local data with the cloud version. Continue?")) return;
-            }
+            if (!silent && !confirm("Overwrite local data with Cloud version? This cannot be undone.")) return;
 
+            const token = localStorage.getItem('haraz_github_token');
             if (!silent) showToast("Fetching from Cloud...");
-            const url = `https://api.jsonbin.io/v3/b/${CLOUD_CONFIG.binId}/latest`;
+
+            const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
 
             try {
-                const response = await fetch(url, {
-                    headers: {
-                        'X-Master-Key': CLOUD_CONFIG.masterKey,
-                        'X-Bin-Meta': 'false' // Ask for raw data to simplify parsing
-                    }
-                });
+                const headers = { 'Accept': 'application/vnd.github.v3+json' };
+                if (token) headers['Authorization'] = `token ${token}`;
+
+                const response = await fetch(apiUrl, { headers });
 
                 if (response.ok) {
-                    const data = await response.json();
-
-                    // Handle both cases: JSONbin returning raw data (with X-Bin-Meta: false) 
-                    // or wrapped data (if header is ignored)
-                    const finalData = data.record ? data.record : data;
-
-                    if (!finalData || typeof finalData !== 'object') {
-                        throw new Error("Invalid data format received from cloud.");
-                    }
+                    const fileData = await response.json();
+                    const content = decodeURIComponent(escape(atob(fileData.content)));
+                    const finalData = JSON.parse(content);
 
                     inventory = finalData.inventory || [];
                     history = finalData.history || [];
                     settings = finalData.settings || settings;
                     orders = finalData.orders || [];
 
-                    saveData(true); // true to skip auto-pushing back what we just pulled
+                    saveData(true); // Save locally without re-pushing
 
                     if (!silent) {
-                        showToast("Database downloaded and updated!");
-                        setTimeout(() => window.location.reload(), 1500);
+                        showToast("Data pulled from Cloud!");
+                        setTimeout(() => window.location.reload(), 1000);
                     } else {
                         console.log("Cloud Pull: Success");
                         updateDashboard();
                         if (document.getElementById('inventory').style.display === 'block') renderInventory();
                     }
                 } else {
-                    const error = await response.json();
-                    console.error("Cloud Pull Error:", error);
-                    if (!silent) showToast("Fetch failed: " + (error.message || response.statusText));
+                    const err = await response.json();
+                    if (response.status === 404) {
+                        if (!silent) showToast("Database file not found on GitHub. Push first.");
+                    } else {
+                        throw new Error(err.message || "GitHub Fetch Error");
+                    }
                 }
             } catch (err) {
-                console.error("Cloud Network Error:", err);
-                if (!silent) showToast("Error: " + err.message);
+                console.error("Cloud Error:", err);
+                if (!silent) showToast("Pull failed: " + err.message);
             }
         }
 
