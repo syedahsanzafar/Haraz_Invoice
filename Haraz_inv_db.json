@@ -407,6 +407,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768939100464,
+      "name": "White Paper Croissant bags",
+      "category": "Dairy",
+      "stock": 18,
+      "unit": "Boxes",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
