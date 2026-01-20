@@ -311,6 +311,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768938582220,
+      "name": "1883 Maison Routin France Mango Syrup",
+      "category": "Dairy",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
