@@ -827,6 +827,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768947428531,
+      "name": "Haraz Hot cups 4oz",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Box",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
