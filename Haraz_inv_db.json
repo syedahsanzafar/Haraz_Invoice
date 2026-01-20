@@ -803,6 +803,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768944686659,
+      "name": "Dark Roast Coffee Beans Bulk",
+      "category": "Coffee Beans",
+      "stock": 5,
+      "unit": "Bags",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
