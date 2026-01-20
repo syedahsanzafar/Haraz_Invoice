@@ -23,6 +23,18 @@
       "supplier": "Haraz Online Store",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768935788699,
+      "name": "Haraz Insulated Cups 12oz",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 7,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
