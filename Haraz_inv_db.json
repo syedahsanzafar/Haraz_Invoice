@@ -839,6 +839,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768947481997,
+      "name": "Haraz Paper cup Jacket",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "-",
+      "min": 0,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
