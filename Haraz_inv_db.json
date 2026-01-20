@@ -707,6 +707,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768944111282,
+      "name": "Harazi Coffee Bulk",
+      "category": "Dairy",
+      "stock": 6,
+      "unit": "Packs",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
