@@ -431,6 +431,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768939386727,
+      "name": "Haraz Pet Plate 9x6",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
