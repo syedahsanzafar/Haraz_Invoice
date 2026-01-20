@@ -95,6 +95,18 @@
       "supplier": "Haraz Online Store",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768936520245,
+      "name": "Haraz Pet Cup 16oz",
+      "category": "Dairy",
+      "stock": 8,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 30,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
