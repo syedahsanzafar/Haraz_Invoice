@@ -623,6 +623,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768943743769,
+      "name": "Whipped Cream",
+      "category": "Dairy",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
