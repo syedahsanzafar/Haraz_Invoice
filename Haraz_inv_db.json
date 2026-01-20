@@ -887,6 +887,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768948180388,
+      "name": "Chef Master Violet Gel food color",
+      "category": "Dairy",
+      "stock": 4,
+      "unit": "Bottles",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
