@@ -203,6 +203,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768937840168,
+      "name": "1883 Maison Routin France Hazelnut Syrup",
+      "category": "Syrups",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 12,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
