@@ -167,6 +167,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768937646004,
+      "name": "1883 Maison Routin France Lavender Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
