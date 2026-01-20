@@ -671,6 +671,18 @@
       "supplier": "-",
       "price": 0,
       "link": ""
+    },
+    {
+      "id": 1768943966499,
+      "name": "Novo Foaming hand soap",
+      "category": "Cleaning",
+      "stock": 4,
+      "unit": "Bottles",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
   "history": [],
