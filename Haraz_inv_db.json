@@ -4,7 +4,7 @@
       "id": 1768935688050,
       "name": "Haraz Insulated Hot Cups 16oz",
       "category": "Packaging",
-      "stock": 3,
+      "stock": 12,
       "unit": "boxes",
       "min": 3,
       "usageDays": 7,
@@ -913,46 +913,40 @@
       "link": ""
     }
   ],
-  "history": [],
+  "history": [
+    {
+      "id": 1768966618656,
+      "date": "2026-01-21",
+      "receivedDate": "2026-01-21",
+      "item": "Haraz Insulated Hot Cups 16oz",
+      "qty": 3,
+      "price": 0,
+      "supplier": "Haraz Online Store"
+    },
+    {
+      "id": 1768966667957,
+      "date": "2026-01-21",
+      "receivedDate": "2026-01-21",
+      "item": "Haraz Insulated Hot Cups 16oz",
+      "qty": 3,
+      "price": 0,
+      "supplier": "Haraz Online Store"
+    },
+    {
+      "id": 1768967206733,
+      "date": "2026-01-21",
+      "receivedDate": "2026-01-21",
+      "item": "Haraz Insulated Hot Cups 16oz",
+      "qty": 3,
+      "price": 0,
+      "supplier": "Haraz Online Store"
+    }
+  ],
   "settings": {
     "budget": 10000,
     "spend": 0,
     "threshold": 20,
     "email": "admin@harazcoffee.com"
   },
-  "orders": [
-    {
-      "id": 1768967206733,
-      "date": "2026-01-21",
-      "itemId": 1768935688050,
-      "itemName": "Haraz Insulated Hot Cups 16oz",
-      "qty": 3,
-      "price": 0,
-      "cost": 0,
-      "unit": "boxes",
-      "supplier": "Haraz Online Store"
-    },
-    {
-      "id": 1768966667957,
-      "date": "2026-01-21",
-      "itemId": 1768935688050,
-      "itemName": "Haraz Insulated Hot Cups 16oz",
-      "qty": 3,
-      "price": 0,
-      "cost": 0,
-      "unit": "boxes",
-      "supplier": "Haraz Online Store"
-    },
-    {
-      "id": 1768966618656,
-      "date": "2026-01-21",
-      "itemId": 1768935688050,
-      "itemName": "Haraz Insulated Hot Cups 16oz",
-      "qty": 3,
-      "price": 0,
-      "cost": 0,
-      "unit": "boxes",
-      "supplier": "Haraz Online Store"
-    }
-  ]
+  "orders": []
 }
