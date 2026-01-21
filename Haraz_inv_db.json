@@ -40,7 +40,7 @@
       "id": 1768935851547,
       "name": "Haraz Cup Jackets for 10-24oz cup ",
       "category": "Packaging",
-      "stock": 1,
+      "stock": 4,
       "unit": "boxes",
       "min": 2,
       "usageDays": 7,
@@ -601,24 +601,22 @@
       "link": ""
     }
   ],
-  "history": [],
+  "history": [
+    {
+      "id": 1769008073223,
+      "date": "2026-01-21",
+      "receivedDate": "2026-01-21",
+      "item": "Haraz Cup Jackets for 10-24oz cup ",
+      "qty": 3,
+      "price": 0,
+      "supplier": "Haraz Online Store"
+    }
+  ],
   "settings": {
     "budget": 10000,
     "spend": 0,
     "threshold": 20,
     "email": "admin@harazcoffee.com"
   },
-  "orders": [
-    {
-      "id": 1769008073223,
-      "date": "2026-01-21",
-      "itemId": 1768935851547,
-      "itemName": "Haraz Cup Jackets for 10-24oz cup ",
-      "qty": 3,
-      "price": 0,
-      "cost": 0,
-      "unit": "boxes",
-      "supplier": "Haraz Online Store"
-    }
-  ]
+  "orders": []
 }
