@@ -182,6 +182,54 @@
             border: 1px solid var(--glass-border);
         }
 
+        .db-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--glass-bg);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            transition: all 0.3s ease;
+        }
+
+        .status-dot.online {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .status-dot.offline {
+            background: var(--danger);
+            box-shadow: 0 0 8px var(--danger);
+        }
+
+        .status-dot.syncing {
+            background: var(--warning);
+            animation: pulse-sync 1s infinite alternate;
+        }
+
+        @keyframes pulse-sync {
+            from {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
         /* Stats Grid */
         .stats-grid {
             display: grid;
@@ -451,6 +499,11 @@
             outline: none;
         }
 
+        .form-group select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
         /* Stock Take View */
         .stock-take-grid {
             display: grid;
@@ -486,11 +539,32 @@
         }
 
         /* Charts Section */
-        .charts-container {
+        .charts-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .heatmap-cell {
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.05);
         }
 
         /* Animations */
@@ -696,8 +770,8 @@
                 <span>Procurement</span>
             </li>
             <li class="nav-item" onclick="showSection('analytics', this)" role="button" tabindex="0">
-                <i data-lucide="bar-chart-3"></i>
-                <span>Trends</span>
+                <i data-lucide="history"></i>
+                <span>Purchase History</span>
             </li>
             <li class="nav-item" onclick="showSection('settings', this)" role="button" tabindex="0">
                 <i data-lucide="settings"></i>
@@ -748,17 +822,23 @@
                 <h1 id="view-title">Dashboard</h1>
                 <p id="view-subtitle">Welcome back, Haraz Manager</p>
             </div>
-            <div class="user-profile">
-                <div id="alert-trigger" style="position: relative; cursor: pointer;"
-                    onclick="handleNotificationClick()">
-                    <i data-lucide="bell" style="width: 20px;"></i>
-                    <span id="notification-dot"
-                        style="position: absolute; top: -5px; right: -5px; background: var(--danger); width: 8px; height: 8px; border-radius: 50%; display: none;"></span>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="db-status-indicator" id="cloud-status-box">
+                    <span class="status-dot" id="cloud-status-dot"></span>
+                    <span id="cloud-status-text">Checking Cloud...</span>
                 </div>
-                <div
-                    style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                    H</div>
-                <span>Haraz Admin</span>
+                <div class="user-profile">
+                    <div id="alert-trigger" style="position: relative; cursor: pointer;"
+                        onclick="handleNotificationClick()">
+                        <i data-lucide="bell" style="width: 20px;"></i>
+                        <span id="notification-dot"
+                            style="position: absolute; top: -5px; right: -5px; background: var(--danger); width: 8px; height: 8px; border-radius: 50%; display: none;"></span>
+                    </div>
+                    <div
+                        style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                        H</div>
+                    <span>Haraz Admin</span>
+                </div>
             </div>
         </header>
 
@@ -803,13 +883,44 @@
                 </div>
             </div>
 
-            <div class="charts-container">
+            <div class="charts-grid">
+                <!-- 1. Inventory Health -->
                 <div class="card">
-                    <h3 style="margin-bottom: 1.5rem;">Inventory Usage Trend</h3>
-                    <canvas id="usageChart" height="200"></canvas>
+                    <h3 style="margin-bottom: 1rem;">Inventory Health (Stock vs. Min)</h3>
+                    <canvas id="healthChart" height="250"></canvas>
                 </div>
+
+                <!-- 2. Items Requiring Reorder -->
                 <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Stock Alerts</h3>
+                    <h3 style="margin-bottom: 1rem;">Items Requiring Reorder</h3>
+                    <canvas id="reorderChart" height="250"></canvas>
+                </div>
+
+                <!-- 3. Stock Distribution -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Category Distribution</h3>
+                    <div style="height: 250px; display: flex; justify-content: center;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 4. Supplier Reliance -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Supplier Reliance</h3>
+                    <canvas id="supplierChart" height="250"></canvas>
+                </div>
+
+                <!-- 5. Stock Level Heatmap -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Stock Status Heatmap</h3>
+                    <div id="stock-heatmap" class="heatmap-grid">
+                        <!-- Heatmap cells will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Stock Alerts (Keeping it as it's useful) -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Priority Stock Alerts</h3>
                     <div id="dashboard-alerts" style="display: flex; flex-direction: column; gap: 1rem;">
                         <!-- Alerts will be injected here -->
                     </div>
@@ -825,6 +936,9 @@
                     <input type="text" placeholder="Search items..." onkeyup="filterInventory(this.value)">
                 </div>
                 <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" onclick="openModal('categoryModal')">
+                        <i data-lucide="layers"></i> Category Management
+                    </button>
                     <button class="btn btn-outline" onclick="exportToExcel()">
                         <i data-lucide="file-spreadsheet"></i> Export to Excel
                     </button>
@@ -838,6 +952,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Image</th>
                             <th>Item Name</th>
                             <th>Category</th>
                             <th>Current Stock</th>
@@ -896,21 +1011,8 @@
             </div>
         </div>
 
-        <!-- ANALYTICS SECTION -->
         <div id="analytics" class="section animated">
-            <div class="stats-grid">
-                <div class="card" style="grid-column: span 2;">
-                    <h3>Price Overview</h3>
-                    <canvas id="priceHistoryChart" height="250"></canvas>
-                </div>
-                <div class="card">
-                    <h3>Top Suppliers</h3>
-                    <div id="top-suppliers-list" style="margin-top: 1rem;">
-                        <!-- Supplier list goes here -->
-                    </div>
-                </div>
-            </div>
-            <div class="card" style="margin-top: 1.5rem;">
+            <div class="card">
                 <h3>Recent Purchase History</h3>
                 <table>
                     <thead>
@@ -920,6 +1022,7 @@
                             <th>Supplier</th>
                             <th>Quantity</th>
                             <th>Total Cost</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="purchase-history-body">
@@ -966,6 +1069,11 @@
                     <button class="btn btn-outline" onclick="exportData()">
                         <i data-lucide="save"></i> Export Local JSON
                     </button>
+                    <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">
+                        <i data-lucide="upload"></i> Restore Local JSON
+                    </button>
+                    <input type="file" id="import-file" style="display: none;" accept=".json"
+                        onchange="importData(event)">
                     <button class="btn btn-outline" onclick="resetSystem()"
                         style="color: var(--danger); border-color: var(--danger);">
                         <i data-lucide="trash-2"></i> Reset System
@@ -994,11 +1102,7 @@
                     <div class="form-group">
                         <label>Category</label>
                         <select id="new-item-category">
-                            <option>Dairy</option>
-                            <option>Coffee Beans</option>
-                            <option>Syrups</option>
-                            <option>Packaging</option>
-                            <option>Cleaning</option>
+                            <!-- Options dynamically populated -->
                         </select>
                     </div>
                 </div>
@@ -1033,6 +1137,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label>Product Image (Home Only)</label>
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <input type="file" id="new-item-image" accept="image/*" style="flex:1"
+                            onchange="previewImage(this)">
+                        <div id="image-preview-container"
+                            style="width: 80px; height: 80px; border: 1px dashed var(--glass-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <span style="font-size: 0.6rem; color: var(--text-dim);">No Image</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label>Supplier Link</label>
                     <input type="url" id="new-item-link" placeholder="https://supplier.com">
                 </div>
@@ -1041,10 +1156,79 @@
         </div>
     </div>
 
+    <!-- Modal for Category Management -->
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Manage Categories</h2>
+                <button onclick="closeModal('categoryModal')"
+                    style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button>
+            </div>
+            <div class="form-group" style="display: flex; gap: 10px; margin-bottom: 1.5rem; margin-top: 1rem;">
+                <input type="text" id="new-category-input" placeholder="New category name..." style="flex: 1;">
+                <button class="btn btn-primary" onclick="addCategory()">Add</button>
+            </div>
+            <div id="category-list"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                <!-- Categories will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Toast -->
     <div id="notification-toast"></div>
 
     <script>
+        // --- Image Storage (IndexedDB) ---
+        const DB_NAME = "HarazImagesDB";
+        const STORE_NAME = "product_images";
+        let db;
+
+        const initDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, 1);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME);
+                    }
+                };
+                request.onsuccess = (e) => {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                request.onerror = (e) => reject(e);
+            });
+        };
+
+        const storeImage = (id, dataUrl) => {
+            return new Promise((resolve) => {
+                const tx = db.transaction(STORE_NAME, "readwrite");
+                const store = tx.objectStore(STORE_NAME);
+                store.put(dataUrl, id.toString());
+                tx.oncomplete = () => resolve();
+            });
+        };
+
+        const getImage = (id) => {
+            return new Promise((resolve) => {
+                const tx = db.transaction(STORE_NAME, "readonly");
+                const store = tx.objectStore(STORE_NAME);
+                const request = store.get(id.toString());
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => resolve(null);
+            });
+        };
+
+        const deleteImage = (id) => {
+            return new Promise((resolve) => {
+                const tx = db.transaction(STORE_NAME, "readwrite");
+                const store = tx.objectStore(STORE_NAME);
+                store.delete(id.toString());
+                tx.oncomplete = () => resolve();
+            });
+        };
+
         // Data State
         let inventory = JSON.parse(localStorage.getItem('haraz_inventory')) || [
             { id: 1, name: 'Whole Milk', category: 'Dairy', stock: 24, unit: 'Liters', min: 10, supplier: 'Local Dairy', link: '', usageDays: 3, price: 1.50 },
@@ -1061,8 +1245,11 @@
             budget: 1000,
             spend: 193,
             threshold: 20,
-            email: 'admin@harazcoffee.com'
+            email: 'admin@harazcoffee.com',
+            categories: ['Dairy', 'Coffee Beans', 'Syrups', 'Packaging', 'Cleaning']
         };
+        // Ensure categories exist even if settings were partially saved
+        if (!settings.categories) settings.categories = ['Dairy', 'Coffee Beans', 'Syrups', 'Packaging', 'Cleaning'];
 
         let orders = JSON.parse(localStorage.getItem('haraz_orders')) || [];
 
@@ -1071,19 +1258,29 @@
 
         // Initialization
         window.onload = async () => {
+            await initDB();
             lucide.createIcons();
             updateDashboard();
+
+            // Check initial online status
+            if (!navigator.onLine) {
+                setCloudStatus('offline', 'No Internet');
+            }
+
             // Auto-sync on load
             await pullFromCloud(true); // true means silent pull without confirmation
         };
 
+        window.addEventListener('online', () => pullFromCloud(true));
+        window.addEventListener('offline', () => setCloudStatus('offline', 'No Internet'));
+
         // Utility: Save All Data
         function saveData(skipCloud = false) {
+            updateDashboard(); // Ensure calculated fields are up to date before saving
             localStorage.setItem('haraz_inventory', JSON.stringify(inventory));
             localStorage.setItem('haraz_history', JSON.stringify(history));
             localStorage.setItem('haraz_settings', JSON.stringify(settings));
             localStorage.setItem('haraz_orders', JSON.stringify(orders));
-            updateDashboard();
 
             // Auto-push to cloud with debounce
             if (!skipCloud) {
@@ -1127,7 +1324,7 @@
                 inventory: "Inventory Management",
                 stocktake: "Stock Audit",
                 procurement: "Smart Procurement",
-                analytics: "Trends & Reports",
+                analytics: "Purchase History",
                 settings: "Settings"
             };
             if (titles[sectionId]) {
@@ -1165,6 +1362,20 @@
 
         // Dashboard Functions
         function updateDashboard() {
+            // Calculate spend dynamically from history and orders for the current month
+            const now = new Date();
+            const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`; // "YYYY-MM" local
+
+            const historySpend = history
+                .filter(h => h.date && h.date.startsWith(currentMonth))
+                .reduce((sum, h) => sum + (h.qty * h.price), 0);
+
+            const ordersSpend = orders
+                .filter(o => o.date && o.date.startsWith(currentMonth))
+                .reduce((sum, o) => sum + (o.cost || 0), 0);
+
+            settings.spend = historySpend + ordersSpend;
+
             const lowStockCount = inventory.filter(i => i.stock <= i.min).length;
             document.getElementById('stat-total-items').innerText = inventory.length;
             document.getElementById('stat-low-stock').innerText = lowStockCount;
@@ -1174,7 +1385,7 @@
             document.getElementById('stat-pending-orders').innerText = orders.length;
 
             // Budget Progress
-            const progress = (settings.spend / settings.budget) * 100;
+            const progress = (settings.budget > 0) ? (settings.spend / settings.budget) * 100 : 0;
             const bar = document.getElementById('budget-progress');
             bar.style.width = `${Math.min(progress, 100)}%`;
             document.getElementById('budget-text').innerText = `$ ${settings.spend.toFixed(0)} / ${settings.budget.toFixed(0)}`;
@@ -1185,7 +1396,7 @@
 
             // Alerts
             renderDashboardAlerts();
-            initUsageChart();
+            initDashboardCharts();
 
             if (lowStockCount > 0) {
                 document.getElementById('notification-dot').style.display = 'block';
@@ -1207,7 +1418,7 @@
                                 <p style="font-size: 0.9rem; font-weight: 600;">${i.name} Critical!</p>
                                 <p style="font-size: 0.75rem; color: var(--text-dim);">Balance: ${i.stock} ${i.unit}</p>
                             </div>
-                            <button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.7rem;" onclick="showSection('procurement', document.querySelector('.nav-item:nth-child(4)'))">Order</button>
+                            <button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.7rem;" onclick="showSection('procurement', document.querySelector('.nav-item:nth-child(4)')); generateDraftOrders();">Order</button>
                         </div>
                     `;
                 } else {
@@ -1230,21 +1441,39 @@
         }
 
         // Inventory Functions
-        function renderInventory(filterText = '') {
+        async function renderInventory(filterText = '') {
             const tbody = document.getElementById('inventory-table-body');
             tbody.innerHTML = '';
 
-            inventory.filter(i => i.name.toLowerCase().includes(filterText.toLowerCase())).forEach(item => {
+            const filteredItems = inventory.filter(i => i.name.toLowerCase().includes(filterText.toLowerCase()));
+
+            // Optimization: Fetch all images in parallel
+            const itemsWithImages = await Promise.all(filteredItems.map(async (item) => {
+                const imgData = await getImage(item.id);
+                return { ...item, imgData };
+            }));
+
+            for (const item of itemsWithImages) {
                 const isLow = item.stock <= item.min;
-                tbody.innerHTML += `
-                    <tr class="item-row">
+                const tr = document.createElement('tr');
+                tr.className = 'item-row';
+                tr.id = `item-row-${item.id}`;
+                tr.innerHTML = `
+                        <td>
+                            <div style="width: 40px; height: 40px; background: var(--glass-bg); border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border);">
+                                ${item.imgData ? `<img src="${item.imgData}" style="width: 100%; height: 100%; object-fit: cover;">` : '<i data-lucide="image" style="width: 16px; color: var(--text-dim);"></i>'}
+                            </div>
+                        </td>
                         <td style="font-weight: 600;">${item.name}</td>
                         <td style="color: var(--text-dim);">${item.category}</td>
                         <td>
                             <div class="counter">
-                                <button class="counter-btn" onclick="adjustStock(${item.id}, -1)">-</button>
-                                <span style="font-weight: bold; width: 40px; text-align: center;">${item.stock}</span>
-                                <button class="counter-btn" onclick="adjustStock(${item.id}, 1)">+</button>
+                                <button class="counter-btn" onclick="adjustStock('${item.id}', -1)">-</button>
+                                <input type="number" step="0.01" 
+                                    style="width: 60px; background: transparent; border: 1px solid var(--glass-border); color: white; text-align: center; font-weight: bold; border-radius: 4px;" 
+                                    value="${item.stock}" 
+                                    onchange="updateItemStock('${item.id}', this.value)">
+                                <button class="counter-btn" onclick="adjustStock('${item.id}', 1)">+</button>
                             </div>
                         </td>
                         <td>${item.unit}</td>
@@ -1253,25 +1482,42 @@
                         </td>
                         <td>
                             <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-outline" style="padding: 6px;" onclick="editItem(${item.id})">
+                                <button class="btn btn-outline" style="padding: 6px;" onclick="editItem('${item.id}')">
                                     <i data-lucide="edit-2" style="width: 14px;"></i>
                                 </button>
-                                <button class="btn btn-outline" style="padding: 6px; color: var(--danger); border-color: var(--danger);" onclick="deleteItem(${item.id})">
+                                <button class="btn btn-outline" style="padding: 6px; color: var(--danger); border-color: var(--danger);" onclick="deleteItem('${item.id}')">
                                     <i data-lucide="trash-2" style="width: 14px;"></i>
                                 </button>
                             </div>
                         </td>
-                    </tr>
                 `;
-            });
+                tbody.appendChild(tr);
+            }
             lucide.createIcons();
         }
 
+        function getStockStatus(item) {
+            const stock = parseFloat(item.stock) || 0;
+            const min = parseFloat(item.min) || 0;
+            if (stock <= min) return { color: 'var(--danger)', label: 'Critical' };
+            if (stock <= min * 1.5) return { color: 'var(--warning)', label: 'Watch' };
+            return { color: 'var(--success)', label: 'Healthy' };
+        }
+
         function adjustStock(id, amount) {
-            const item = inventory.find(i => i.id === id);
+            const item = inventory.find(i => i.id == id);
             if (item) {
                 item.stock = parseFloat((item.stock + amount).toFixed(2));
                 if (item.stock < 0) item.stock = 0;
+                saveData();
+                renderInventory();
+            }
+        }
+
+        function updateItemStock(id, val) {
+            const item = inventory.find(i => i.id == id);
+            if (item) {
+                item.stock = parseFloat(parseFloat(val).toFixed(2)) || 0;
                 saveData();
                 renderInventory();
             }
@@ -1304,8 +1550,8 @@
             inputs.forEach(input => {
                 const val = parseFloat(input.value);
                 if (!isNaN(val)) {
-                    const id = parseInt(input.dataset.id);
-                    const item = inventory.find(i => i.id === id);
+                    const id = input.dataset.id;
+                    const item = inventory.find(i => i.id == id);
                     if (item) {
                         item.stock = val;
                         count++;
@@ -1314,6 +1560,7 @@
             });
             if (count > 0) {
                 saveData();
+                pushToCloud(true); // Immediate upload after audit
                 showToast(`Audit saved for ${count} items.`);
                 showSection('dashboard', document.querySelector('.nav-item:first-child'));
             } else {
@@ -1326,7 +1573,10 @@
             const container = document.getElementById('draft-orders-container');
             container.innerHTML = '';
 
-            const lowItems = inventory.filter(item => item.stock <= item.min);
+            const lowItems = inventory.filter(item => {
+                const isAlreadyOrdered = orders.some(o => o.itemId == item.id);
+                return item.stock <= item.min && !isAlreadyOrdered;
+            });
 
             if (lowItems.length === 0) {
                 container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-dim); padding: 3rem;">No orders required. All stock levels are sufficient.</p>';
@@ -1363,9 +1613,21 @@
             lucide.createIcons();
         }
 
-        function completePurchase(id, qty, cost) {
-            const item = inventory.find(i => i.id === id);
-            if (confirm(`Place order for ${qty} ${item.unit} of ${item.name} for $${cost.toFixed(2)}?`)) {
+        function completePurchase(id, defaultQty, cost) {
+            const item = inventory.find(i => i.id == id);
+
+            const userQty = prompt(`Enter quantity to order for ${item.name} (${item.unit}):`, defaultQty);
+            if (userQty === null) return; // Cancelled
+
+            const qty = parseFloat(userQty);
+            if (isNaN(qty) || qty <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            const finalCost = qty * item.price;
+
+            if (confirm(`Place order for ${qty} ${item.unit} of ${item.name} for $${finalCost.toFixed(2)}?`)) {
                 // Add to orders instead of immediate stock update
                 orders.unshift({
                     id: Date.now(),
@@ -1374,12 +1636,11 @@
                     itemName: item.name,
                     qty: qty,
                     price: item.price,
-                    cost: cost,
+                    cost: finalCost,
                     unit: item.unit,
                     supplier: item.supplier
                 });
 
-                settings.spend += cost;
                 saveData();
                 generateDraftOrders();
                 showToast("Order placed and tracking started.");
@@ -1387,11 +1648,11 @@
         }
 
         function receiveOrder(orderId) {
-            const orderIndex = orders.findIndex(o => o.id === orderId);
+            const orderIndex = orders.findIndex(o => o.id == orderId);
             if (orderIndex === -1) return;
 
             const order = orders[orderIndex];
-            const item = inventory.find(i => i.id === order.itemId);
+            const item = inventory.find(i => i.id == order.itemId);
 
             if (confirm(`Mark shipment for ${order.itemName} (${order.qty} ${order.unit}) as received? Stock will be updated.`)) {
                 if (item) {
@@ -1478,80 +1739,168 @@
                         <td style="color: var(--text-dim);">${h.supplier}</td>
                         <td>${h.qty}</td>
                         <td>$ ${(h.qty * h.price).toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-outline" style="padding: 6px; color: var(--danger); border-color: var(--danger);" onclick="deleteHistoryEntry(${h.id})">
+                                <i data-lucide="trash-2" style="width: 14px;"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
             });
+            lucide.createIcons();
+        }
 
-            // Supplier List
-            const suppliers = {};
-            history.forEach(h => {
-                suppliers[h.supplier] = (suppliers[h.supplier] || 0) + (h.qty * h.price);
-            });
-
-            const list = document.getElementById('top-suppliers-list');
-            list.innerHTML = '';
-            Object.entries(suppliers).sort((a, b) => b[1] - a[1]).slice(0, 5).forEach(([name, spent]) => {
-                list.innerHTML += `
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--glass-border);">
-                        <span>${name}</span>
-                        <span style="font-weight: 600;">$ ${spent.toFixed(2)}</span>
-                    </div>
-                `;
-            });
-
-            initPriceChart();
+        function deleteHistoryEntry(id) {
+            if (confirm("Delete this purchase history entry? This will not affect current stock.")) {
+                const index = history.findIndex(h => h.id === id);
+                if (index !== -1) {
+                    history.splice(index, 1);
+                    saveData();
+                    pushToCloud(true); // Immediate upload after deletion
+                    renderAnalytics();
+                }
+            }
         }
 
         // Charts Logic
-        function initUsageChart() {
-            const ctx = document.getElementById('usageChart');
-            if (!ctx) return;
-            if (usageChart && typeof usageChart.destroy === 'function') usageChart.destroy();
-            usageChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Total Stock Volume',
-                        data: [40, 38, 35, 45, 42, 40, 37],
-                        borderColor: '#d4af37',
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(212, 175, 55, 0.1)'
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' } },
-                        x: { grid: { display: false } }
+        let charts = {};
+        function initDashboardCharts() {
+            // Cleanup existing charts
+            Object.values(charts).forEach(c => c && typeof c.destroy === 'function' && c.destroy());
+            charts = {};
+
+            // 1. Inventory Health (Grouped Bar)
+            const healthCtx = document.getElementById('healthChart');
+            if (healthCtx) {
+                const labels = inventory.map(i => i.name).slice(0, 10);
+                const stockData = inventory.map(i => i.stock).slice(0, 10);
+                const minData = inventory.map(i => i.min).slice(0, 10);
+
+                charts.health = new Chart(healthCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'Current Stock', data: stockData, backgroundColor: '#d4af37' },
+                            { label: 'Min Level', data: minData, backgroundColor: 'rgba(255, 255, 255, 0.1)' }
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'x',
+                        plugins: { legend: { display: true, labels: { color: '#f5f5f5' } } },
+                        scales: {
+                            x: { ticks: { color: '#b3b3b3' }, grid: { display: false } },
+                            y: { ticks: { color: '#b3b3b3' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                        }
                     }
-                }
-            });
+                });
+            }
+
+            // 2. Items Requiring Reorder (Horizontal Bar)
+            const reorderCtx = document.getElementById('reorderChart');
+            if (reorderCtx) {
+                const reorderItems = inventory.filter(i => i.stock <= i.min).sort((a, b) => (a.stock / a.min) - (b.stock / b.min));
+                const labels = reorderItems.map(i => i.name).slice(0, 8);
+                const data = reorderItems.map(i => i.stock).slice(0, 8);
+
+                charts.reorder = new Chart(reorderCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{ label: 'Stock Level', data: data, backgroundColor: '#ff4d4d' }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: '#b3b3b3' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            y: { ticks: { color: '#b3b3b3' }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // 3. Category Distribution (Pie)
+            const catCtx = document.getElementById('categoryChart');
+            if (catCtx) {
+                const cats = {};
+                inventory.forEach(i => cats[i.category] = (cats[i.category] || 0) + 1);
+
+                charts.category = new Chart(catCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(cats),
+                        datasets: [{
+                            data: Object.values(cats),
+                            backgroundColor: ['#5c4033', '#d4af37', '#a67c52', '#00e676', '#ffab00', '#ff4d4d']
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: '#f5f5f5', padding: 20 } }
+                        }
+                    }
+                });
+            }
+
+            // 4. Supplier Reliance (Stacked Bar)
+            const supplierCtx = document.getElementById('supplierChart');
+            if (supplierCtx) {
+                const res = {};
+                inventory.forEach(i => {
+                    if (!res[i.supplier]) res[i.supplier] = { count: 0, value: 0 };
+                    res[i.supplier].count++;
+                    res[i.supplier].value += (i.stock * i.price);
+                });
+
+                charts.supplier = new Chart(supplierCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(res),
+                        datasets: [
+                            { label: 'Total Value ($)', data: Object.values(res).map(v => v.value), backgroundColor: '#a67c52' },
+                            { label: 'Item Variation', data: Object.values(res).map(v => v.count), backgroundColor: '#d4af37' }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            x: { stacked: true, ticks: { color: '#b3b3b3' } },
+                            y: { stacked: true, ticks: { color: '#b3b3b3' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                        },
+                        plugins: { legend: { labels: { color: '#f5f5f5' } } }
+                    }
+                });
+            }
+
+            // 5. Stock Level Heatmap
+            const heatmap = document.getElementById('stock-heatmap');
+            if (heatmap) {
+                heatmap.innerHTML = '';
+                (async () => {
+                    // Optimized: Fetch all heatmap images in parallel
+                    const itemsWithImages = await Promise.all(inventory.map(async (i) => {
+                        const imgData = await getImage(i.id);
+                        return { ...i, imgData };
+                    }));
+
+                    for (const i of itemsWithImages) {
+                        const status = getStockStatus(i);
+                        const cell = document.createElement('div');
+                        cell.className = 'heatmap-cell';
+                        cell.style.background = status.color;
+                        cell.style.border = `1px solid ${status.color}`;
+                        cell.title = `${i.name}: ${i.stock} ${i.unit}`;
+                        cell.innerHTML = `
+                            ${i.imgData ? `<img src="${i.imgData}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; margin-bottom: 2px;">` : ''}
+                            <div style="font-size: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${i.name}</div>
+                            <div style="font-size: 0.7rem;">${Math.round(i.stock)}</div>
+                        `;
+                        heatmap.appendChild(cell);
+                    }
+                })();
+            }
         }
 
-        function initPriceChart() {
-            const ctx = document.getElementById('priceHistoryChart');
-            if (!ctx) return;
-            if (priceChart && typeof priceChart.destroy === 'function') priceChart.destroy();
-            priceChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: inventory.map(i => i.name).slice(0, 5),
-                    datasets: [{
-                        label: 'Current Unit Price ($)',
-                        data: inventory.map(i => i.price).slice(0, 5),
-                        backgroundColor: '#a67c52'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' } }
-                    }
-                }
-            });
-        }
 
         // Settings Functions
         function updateSettings() {
@@ -1567,6 +1916,80 @@
             document.getElementById('setting-threshold').value = settings.threshold;
             document.getElementById('setting-email').value = settings.email;
             document.getElementById('setting-github-token').value = localStorage.getItem('haraz_github_token') || '';
+            renderCategorySettings();
+        }
+
+        function renderCategorySettings() {
+            const container = document.getElementById('category-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            settings.categories.forEach(cat => {
+                const item = document.createElement('div');
+                item.style = "background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border);";
+                item.innerHTML = `
+                    <span style="font-weight: 500;">${cat}</span>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn btn-outline" style="padding: 4px; border-color: transparent;" onclick="editCategory('${cat}')">
+                            <i data-lucide="edit-2" style="width: 14px;"></i>
+                        </button>
+                        <button class="btn btn-outline" style="padding: 4px; color: var(--danger); border-color: transparent;" onclick="deleteCategory('${cat}')">
+                            <i data-lucide="x" style="width: 14px;"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        function addCategory() {
+            const input = document.getElementById('new-category-input');
+            const val = input.value.trim();
+            if (val && !settings.categories.includes(val)) {
+                settings.categories.push(val);
+                input.value = '';
+                saveData();
+                renderCategorySettings();
+                showToast(`Category "${val}" added.`);
+            }
+        }
+
+        function editCategory(oldCat) {
+            const newCat = prompt("Rename category:", oldCat);
+            if (newCat && newCat.trim() !== "" && newCat !== oldCat) {
+                const trimmedNewCat = newCat.trim();
+
+                if (settings.categories.includes(trimmedNewCat)) {
+                    alert("A category with this name already exists.");
+                    return;
+                }
+
+                // Update settings
+                const index = settings.categories.indexOf(oldCat);
+                if (index !== -1) {
+                    settings.categories[index] = trimmedNewCat;
+                }
+
+                // Update all items in inventory that use this category
+                inventory.forEach(item => {
+                    if (item.category === oldCat) {
+                        item.category = trimmedNewCat;
+                    }
+                });
+
+                saveData();
+                renderCategorySettings();
+                showToast(`Category renamed to "${trimmedNewCat}". Items updated.`);
+            }
+        }
+
+        function deleteCategory(cat) {
+            if (confirm(`Delete category "${cat}"? Items in this category will remain, but the category won't be available for new items.`)) {
+                settings.categories = settings.categories.filter(c => c !== cat);
+                saveData();
+                renderCategorySettings();
+            }
         }
 
         function saveGithubToken() {
@@ -1587,16 +2010,28 @@
         }
 
         // Modal Logic
-        function openModal(id, itemId = null) {
+        async function openModal(id, itemId = null) {
             document.getElementById(id).style.display = 'flex';
+            currentProcessedImage = null;
+            document.getElementById('image-preview-container').innerHTML = '<span style="font-size: 0.6rem; color: var(--text-dim);">No Image</span>';
+
+            // Populate category dropdown
+            const catSelect = document.getElementById('new-item-category');
+            if (catSelect) {
+                catSelect.innerHTML = settings.categories.map(c => `<option>${c}</option>`).join('');
+            }
 
             // Sync settings UI with state
             if (id === 'settings') {
                 syncSettingsUI();
             }
 
+            if (id === 'categoryModal') {
+                renderCategorySettings();
+            }
+
             if (itemId) {
-                const item = inventory.find(i => i.id === itemId);
+                const item = inventory.find(i => i.id == itemId);
                 document.getElementById('modal-title').innerText = "Edit Item";
                 document.getElementById('edit-item-id').value = item.id;
                 document.getElementById('new-item-name').value = item.name;
@@ -1608,6 +2043,11 @@
                 document.getElementById('new-item-supplier').value = item.supplier;
                 document.getElementById('new-item-price').value = item.price;
                 document.getElementById('new-item-link').value = item.link;
+
+                const existingImg = await getImage(item.id);
+                if (existingImg) {
+                    document.getElementById('image-preview-container').innerHTML = `<img src="${existingImg}" style="width:100%; height:100%; object-fit:cover;">`;
+                }
             } else {
                 document.getElementById('modal-title').innerText = "Add New Item";
                 document.getElementById('add-item-form').reset();
@@ -1623,13 +2063,14 @@
             openModal('addItemModal', id);
         }
 
-        function deleteItem(id) {
-            const item = inventory.find(i => i.id === id);
+        async function deleteItem(id) {
+            const item = inventory.find(i => i.id == id);
             if (!item) return;
 
             if (confirm(`Are you sure you want to delete "${item.name}"? This action cannot be undone.`)) {
-                const index = inventory.findIndex(i => i.id === id);
+                const index = inventory.findIndex(i => i.id == id);
                 inventory.splice(index, 1);
+                await deleteImage(id); // Remove local image
                 saveData();
                 renderInventory();
                 updateDashboard();
@@ -1637,7 +2078,43 @@
             }
         }
 
-        document.getElementById('add-item-form').onsubmit = function (e) {
+        let currentProcessedImage = null;
+        function previewImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const size = 500;
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+
+                    // Center Crop
+                    let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
+                    const aspect = img.width / img.height;
+                    if (aspect > 1) {
+                        srcW = img.height;
+                        srcX = (img.width - img.height) / 2;
+                    } else {
+                        srcH = img.width;
+                        srcY = (img.height - img.width) / 2;
+                    }
+
+                    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, size, size);
+                    currentProcessedImage = canvas.toDataURL('image/jpeg', 0.7);
+
+                    document.getElementById('image-preview-container').innerHTML = `<img src="${currentProcessedImage}" style="width:100%; height:100%; object-fit:cover;">`;
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        document.getElementById('add-item-form').onsubmit = async function (e) {
             e.preventDefault();
             const editId = document.getElementById('edit-item-id').value;
 
@@ -1653,18 +2130,25 @@
                 link: document.getElementById('new-item-link').value || ''
             };
 
+            let finalId = editId;
             if (editId) {
                 const index = inventory.findIndex(i => i.id == editId);
                 inventory[index] = { ...inventory[index], ...itemData };
                 showToast("Item updated.");
             } else {
-                inventory.push({ id: Date.now(), ...itemData });
+                finalId = Date.now().toString();
+                inventory.push({ id: finalId, ...itemData });
                 showToast("Item added.");
+            }
+
+            if (currentProcessedImage) {
+                await storeImage(finalId, currentProcessedImage);
             }
 
             saveData();
             closeModal('addItemModal');
             renderInventory();
+            currentProcessedImage = null;
         };
 
         // UI Helpers
@@ -1683,6 +2167,23 @@
             branch: "main"
         };
 
+        function setCloudStatus(type, msg) {
+            const dot = document.getElementById('cloud-status-dot');
+            const text = document.getElementById('cloud-status-text');
+            if (!dot || !text) return;
+
+            dot.className = 'status-dot ' + type;
+            text.innerText = msg;
+
+            if (type === 'offline') {
+                text.style.color = 'var(--danger)';
+            } else if (type === 'online') {
+                text.style.color = 'var(--success)';
+            } else {
+                text.style.color = 'var(--text-main)';
+            }
+        }
+
         async function pushToCloud(silent = false) {
             const token = localStorage.getItem('haraz_github_token');
             if (!token) {
@@ -1691,6 +2192,7 @@
             }
 
             if (!silent) showToast("Syncing with GitHub...");
+            setCloudStatus('syncing', 'Uploading...');
             const data = { inventory, history, settings, orders };
             const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
 
@@ -1728,6 +2230,7 @@
                 if (putRes.ok) {
                     if (!silent) showToast("Cloud database updated!");
                     console.log("GitHub Sync: Success");
+                    setCloudStatus('online', 'Online');
                 } else {
                     const err = await putRes.json();
                     throw new Error(err.message || "GitHub API Error");
@@ -1735,14 +2238,23 @@
             } catch (err) {
                 console.error("Cloud Error:", err);
                 if (!silent) showToast("Cloud Sync Failed: " + err.message);
+                setCloudStatus('offline', err.message || 'Sync Failed');
             }
         }
 
+        let isSyncing = false;
         async function pullFromCloud(silent = false) {
+            if (isSyncing) return;
+            if (!navigator.onLine) {
+                setCloudStatus('offline', 'No Internet');
+                return;
+            }
             if (!silent && !confirm("Overwrite local data with Cloud version? This cannot be undone.")) return;
+            isSyncing = true;
 
             const token = localStorage.getItem('haraz_github_token');
             if (!silent) showToast("Fetching from Cloud...");
+            setCloudStatus('syncing', 'Fetching...');
 
             const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
 
@@ -1757,13 +2269,24 @@
                     const content = decodeURIComponent(escape(atob(fileData.content)));
                     const finalData = JSON.parse(content);
 
-                    inventory = finalData.inventory || [];
-                    history = finalData.history || [];
-                    settings = finalData.settings || settings;
-                    orders = finalData.orders || [];
+                    // Safety Check: Only pull if the cloud database actually has content 
+                    // or if we are doing a manual (non-silent) pull.
+                    const hasCloudData = finalData.inventory && finalData.inventory.length > 0;
+                    const hasLocalData = inventory && inventory.length > 0;
 
-                    saveData(true); // Save locally without re-pushing
+                    if (hasCloudData || !silent) {
+                        if (finalData.inventory) inventory = finalData.inventory;
+                        if (finalData.history) history = finalData.history;
+                        if (finalData.settings) settings = finalData.settings;
+                        if (finalData.orders) orders = finalData.orders;
 
+                        saveData(true); // Save locally without re-pushing
+                        setCloudStatus('online', 'Online');
+                    } else {
+                        // If cloud is empty and we are silent, we don't overwrite local work
+                        console.log("Cloud Pull: Cloud is empty or uninitialized. Keeping local data.");
+                        setCloudStatus('online', 'Online (Cloud Empty)');
+                    }
                     if (!silent) {
                         showToast("Data pulled from Cloud!");
                         setTimeout(() => window.location.reload(), 1000);
@@ -1776,6 +2299,9 @@
                     const err = await response.json();
                     if (response.status === 404) {
                         if (!silent) showToast("Database file not found on GitHub. Push first.");
+                        setCloudStatus('offline', 'DB Not Found');
+                    } else if (response.status === 401) {
+                        setCloudStatus('offline', 'Token Invalid');
                     } else {
                         throw new Error(err.message || "GitHub Fetch Error");
                     }
@@ -1783,6 +2309,9 @@
             } catch (err) {
                 console.error("Cloud Error:", err);
                 if (!silent) showToast("Pull failed: " + err.message);
+                setCloudStatus('offline', err.message || 'Cloud Error');
+            } finally {
+                isSyncing = false;
             }
         }
 
@@ -1797,13 +2326,40 @@
         }
 
         function exportData() {
-            const data = JSON.stringify({ inventory, history, settings }, null, 2);
+            const data = JSON.stringify({ inventory, history, settings, orders }, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `haraz_backup_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (confirm("Replace all current data with the selected file? This will overwrite your local database.")) {
+                        inventory = data.inventory || [];
+                        history = data.history || [];
+                        settings = data.settings || settings;
+                        orders = data.orders || [];
+
+                        saveData();
+                        pushToCloud(true);
+
+                        showToast("Local database restored successfully!");
+                        setTimeout(() => window.location.reload(), 1500);
+                    }
+                } catch (err) {
+                    alert("Error parsing JSON file: " + err.message);
+                }
+            };
+            reader.readAsText(file);
         }
 
         // Register Service Worker for PWA
