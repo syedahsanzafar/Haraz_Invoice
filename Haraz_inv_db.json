@@ -1,14 +1,5 @@
 {
-  "customers": [
-    {
-      "name": "John Doe",
-      "phone": "555-0101"
-    },
-    {
-      "name": "Jane Smith",
-      "phone": "555-0202"
-    }
-  ],
+  "customers": [],
   "inventory": [],
   "invoices": [],
   "payments": []
