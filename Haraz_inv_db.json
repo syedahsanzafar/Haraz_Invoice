@@ -608,5 +608,17 @@
     "threshold": 20,
     "email": "admin@harazcoffee.com"
   },
-  "orders": []
+  "orders": [
+    {
+      "id": 1769008073223,
+      "date": "2026-01-21",
+      "itemId": 1768935851547,
+      "itemName": "Haraz Cup Jackets for 10-24oz cup ",
+      "qty": 3,
+      "price": 0,
+      "cost": 0,
+      "unit": "boxes",
+      "supplier": "Haraz Online Store"
+    }
+  ]
 }
