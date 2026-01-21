@@ -1,345 +1,924 @@
 {
-  "customers": [
-    {
-      "name": "Ayesha Khayam",
-      "phone": "4438256690",
-      "email": "ahsan.zafar@gmail.com"
-    },
-    {
-      "name": "Ahsan Zafar",
-      "phone": "333-678",
-      "email": ""
-    }
-  ],
   "inventory": [
     {
-      "name": "Haraz Latte",
-      "price": 5.5
+      "id": 1768935688050,
+      "name": "Haraz Insulated Hot Cups 16oz",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 7,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "Espresso",
-      "price": 3
+      "id": 1768935748632,
+      "name": "Black Lids 10-24oz Cup",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 7,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "Mocha",
-      "price": 6
+      "id": 1768935788699,
+      "name": "Haraz Insulated Cups 12oz",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 7,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "bee bites",
-      "price": 45
+      "id": 1768935851547,
+      "name": "Haraz Cup Jackets for 10-24oz cup ",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 7,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "Mosaic cake",
-      "price": 60
+      "id": 1768936046284,
+      "name": "Paper Cup Holder ",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "boxes",
+      "min": 1,
+      "usageDays": 20,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "Kunafah",
-      "price": 30
+      "id": 1768936101732,
+      "name": "Black 8oz Lids",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "boxes",
+      "min": 1,
+      "usageDays": 15,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "spinach pastry",
-      "price": 10
+      "id": 1768936150899,
+      "name": "Haraz Insulated Hot Cup 8oz",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "boxes",
+      "min": 1,
+      "usageDays": 20,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "criossant",
-      "price": 5
+      "id": 1768936273631,
+      "name": "Haraz Cup Jackets 8oz?",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "boxes",
+      "min": 1,
+      "usageDays": 15,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
     },
     {
-      "name": "cookies",
-      "price": 5
+      "id": 1768936520245,
+      "name": "Haraz Pet Cup 16oz",
+      "category": "Dairy",
+      "stock": 8,
+      "unit": "boxes",
+      "min": 3,
+      "usageDays": 30,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937120945,
+      "name": "Grown Right Organic Strawberry Lemonade",
+      "category": "Dairy",
+      "stock": 10,
+      "unit": "64oz Bottles",
+      "min": 3,
+      "usageDays": 90,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937200443,
+      "name": "Kirkland Organic Lemonade",
+      "category": "Dairy",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 3,
+      "usageDays": 150,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937293059,
+      "name": "Hollander Classic Caramel Cafe sauce",
+      "category": "Syrups",
+      "stock": 29,
+      "unit": "Bottles",
+      "min": 10,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937353191,
+      "name": "Hollander Dutched Chocolate cafe sauce",
+      "category": "Syrups",
+      "stock": 35,
+      "unit": "Bottles",
+      "min": 10,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937453573,
+      "name": "Hollander White Chocolate sauce",
+      "category": "Syrups",
+      "stock": 11,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937646004,
+      "name": "1883 Maison Routin France Lavender Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937709436,
+      "name": "1883 Maison Routin France Vanilla Syrup",
+      "category": "Syrups",
+      "stock": 30,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937762469,
+      "name": "1883 Maison Routin France Pistachio Syrup",
+      "category": "Syrups",
+      "stock": 60,
+      "unit": "Bottles",
+      "min": 18,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937840168,
+      "name": "1883 Maison Routin France Hazelnut Syrup",
+      "category": "Syrups",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 12,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937889967,
+      "name": "1883 Maison Routin France Salted Caramel Syrup",
+      "category": "Syrups",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768937927600,
+      "name": "1883 Maison Routin France Pomegranate Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938101410,
+      "name": "1883 Maison Routin France Blackberry Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938142826,
+      "name": "1883 Maison Routin France Strawberry Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938217175,
+      "name": "1883 Maison Routin France Sugar Cane Syrup",
+      "category": "Dairy",
+      "stock": 18,
+      "unit": "Bottles",
+      "min": 18,
+      "usageDays": 0,
+      "supplier": "Haraz Online Store",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938349123,
+      "name": "Pacific Almond Milk",
+      "category": "Dairy",
+      "stock": 81,
+      "unit": "Carton",
+      "min": 24,
+      "usageDays": 0,
+      "supplier": "Amazon or Haraz Online Store",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938482971,
+      "name": "Chobani Oatmilk",
+      "category": "Dairy",
+      "stock": 163,
+      "unit": "Carton",
+      "min": 60,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938544804,
+      "name": "1883 Maison Routin France Peach Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938582220,
+      "name": "1883 Maison Routin France Mango Syrup",
+      "category": "Dairy",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938617137,
+      "name": "1883 Maison Routin France DragonFruit Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 0,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938645903,
+      "name": "1883 Maison Routin France Coconut Syrup",
+      "category": "Syrups",
+      "stock": 6,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938729635,
+      "name": "Haraz White Chocolate Sauce",
+      "category": "Syrups",
+      "stock": 4,
+      "unit": "Boxes",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938758718,
+      "name": "Haraz Pistachio Sauce",
+      "category": "Dairy",
+      "stock": 6,
+      "unit": "Boxes",
+      "min": 4,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938880950,
+      "name": "Karat Forks",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768938955031,
+      "name": "Karat Knives",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768939005964,
+      "name": "Karat Jumbo Straws",
+      "category": "Packaging",
+      "stock": 3,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768939100464,
+      "name": "Duro White Paper Croissant bags",
+      "category": "Dairy",
+      "stock": 18,
+      "unit": "Boxes",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768939297011,
+      "name": "Karat Wooden Coffee Stirrer",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768939386727,
+      "name": "Haraz Pet Plate 9x6",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768939424942,
+      "name": "Haraz 6x6 Pet container",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768939585291,
+      "name": "Clear Pet Container 6x6",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768940129204,
+      "name": "Extra Large Gloves",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes ",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768940439983,
+      "name": "Paper Bags?",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768940578031,
+      "name": "Handle Shopping Bags medium 41x27",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768940644263,
+      "name": "4 Piece Cuttlery Set",
+      "category": "Packaging",
+      "stock": 4,
+      "unit": "Boxes",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768940875356,
+      "name": "Plastic Sauce Cup 1.5 oz",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768940979653,
+      "name": "Haraz Honey Comb Bread Paper Box",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768941127502,
+      "name": "Black Triangle Box",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768941952425,
+      "name": "3LB Carrier + Bag + Dispenser",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768941974110,
+      "name": "Pet Hinged Container",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768942010477,
+      "name": "Lids 20oz",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768942145442,
+      "name": "Haraz Black 16oz Lids",
+      "category": "Dairy",
+      "stock": 8,
+      "unit": "Boxes",
+      "min": 4,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943587787,
+      "name": "Haraz 20oz Pet Cups",
+      "category": "Packaging",
+      "stock": 4,
+      "unit": "Boxes",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943713668,
+      "name": "Whole Milk ",
+      "category": "Dairy",
+      "stock": 24,
+      "unit": "Gallon",
+      "min": 16,
+      "usageDays": 2,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943743769,
+      "name": "Whipped Cream",
+      "category": "Dairy",
+      "stock": 12,
+      "unit": "Bottles",
+      "min": 6,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943795751,
+      "name": "Calfia Farms Coconut Almond MIlk Blend",
+      "category": "Dairy",
+      "stock": 16,
+      "unit": "Bottles",
+      "min": 5,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943841001,
+      "name": "Half n Half ?",
+      "category": "Dairy",
+      "stock": 30,
+      "unit": "Carton",
+      "min": 10,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943920216,
+      "name": "Glamoroso All purpose Cleaner",
+      "category": "Cleaning",
+      "stock": 5,
+      "unit": "Bottles",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768943966499,
+      "name": "Novo Foaming hand soap",
+      "category": "Cleaning",
+      "stock": 4,
+      "unit": "Bottles",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944006849,
+      "name": "Wet Mops",
+      "category": "Cleaning",
+      "stock": 1,
+      "unit": "Box",
+      "min": 0,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944057016,
+      "name": "Trash Can Liners 45 Gallon 40x48",
+      "category": "Dairy",
+      "stock": 1,
+      "unit": "Box",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944111282,
+      "name": "Harazi Coffee Bulk",
+      "category": "Dairy",
+      "stock": 6,
+      "unit": "Packs",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944142781,
+      "name": "Haraz Evaporated Milk",
+      "category": "Dairy",
+      "stock": 32,
+      "unit": "Boxes",
+      "min": 20,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944436611,
+      "name": "Saudi Coffee Bulk",
+      "category": "Coffee Beans",
+      "stock": 3,
+      "unit": "Packs",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944468527,
+      "name": "Jubani Blend Bulk",
+      "category": "Coffee Beans",
+      "stock": 3,
+      "unit": "Packs",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944501993,
+      "name": "Qishr Bulk",
+      "category": "Coffee Beans",
+      "stock": 3,
+      "unit": "Packs",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944561126,
+      "name": "Turkish Coffee Bulk",
+      "category": "Coffee Beans",
+      "stock": 3,
+      "unit": "Bags",
+      "min": 0,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944610043,
+      "name": "Medium Roast Coffee Beans",
+      "category": "Coffee Beans",
+      "stock": 8,
+      "unit": "Bags",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944640958,
+      "name": "Adeni Blend Bulk",
+      "category": "Coffee Beans",
+      "stock": 5,
+      "unit": "Bags",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944686659,
+      "name": "Dark Roast Coffee Beans Bulk",
+      "category": "Coffee Beans",
+      "stock": 5,
+      "unit": "Bags",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768944760340,
+      "name": "Microfibre Cloth",
+      "category": "Cleaning",
+      "stock": 1,
+      "unit": "Box",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768947428531,
+      "name": "Haraz Hot cups 4oz",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "Box",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768947481997,
+      "name": "Haraz Paper cup Jacket",
+      "category": "Packaging",
+      "stock": 1,
+      "unit": "-",
+      "min": 0,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768947527262,
+      "name": "Dispenser Napkins",
+      "category": "Packaging",
+      "stock": 2,
+      "unit": "Boxes",
+      "min": 1,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768948096722,
+      "name": "Chef Master Neon Bright Green gel",
+      "category": "Syrups",
+      "stock": 4,
+      "unit": "Bottls",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768948151189,
+      "name": "Chef Master Purple Gel food color",
+      "category": "Dairy",
+      "stock": 5,
+      "unit": "Bottles",
+      "min": 3,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768948180388,
+      "name": "Chef Master Violet Gel food color",
+      "category": "Dairy",
+      "stock": 4,
+      "unit": "Bottles",
+      "min": 2,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
+    },
+    {
+      "id": 1768948309620,
+      "name": "Red bull the yellow edition",
+      "category": "Syrups",
+      "stock": 16,
+      "unit": "Cans",
+      "min": 12,
+      "usageDays": 0,
+      "supplier": "-",
+      "price": 0,
+      "link": ""
     }
   ],
-  "invoices": [
-    {
-      "id": "1000",
-      "date": "1/17/2026",
-      "customer": {
-        "name": "Ayesha Khayam",
-        "phone": "4438256690",
-        "email": ""
-      },
-      "items": [
-        {
-          "name": "bee bites",
-          "qty": 7,
-          "price": 45,
-          "subtotal": 315
-        },
-        {
-          "name": "Mosaic cake",
-          "qty": 5,
-          "price": 60,
-          "subtotal": 300
-        },
-        {
-          "name": "Kunafah",
-          "qty": 20,
-          "price": 30,
-          "subtotal": 600
-        },
-        {
-          "name": "spinach pastry",
-          "qty": 50,
-          "price": 10,
-          "subtotal": 500
-        },
-        {
-          "name": "criossant",
-          "qty": 30,
-          "price": 5,
-          "subtotal": 150
-        },
-        {
-          "name": "cookies",
-          "qty": 51,
-          "price": 5,
-          "subtotal": 255
-        }
-      ],
-      "delivery": 20,
-      "total": 2140,
-      "paid": 0
-    },
-    {
-      "id": "1001",
-      "date": "1/18/2026",
-      "customer": {
-        "name": "Ayesha Khayam",
-        "phone": "4438256690",
-        "email": "ahsan.zafar@gmail.com"
-      },
-      "items": [
-        {
-          "name": "Espresso",
-          "qty": 1,
-          "price": 3,
-          "subtotal": 3
-        }
-      ],
-      "delivery": 1,
-      "total": 4,
-      "paid": 0
-    },
-    {
-      "id": "1002",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ahsan Zafar",
-        "phone": "333-678",
-        "email": ""
-      },
-      "items": [
-        {
-          "name": "Espresso",
-          "qty": 100,
-          "price": 3,
-          "subtotal": 300
-        },
-        {
-          "name": "Mocha",
-          "qty": 20,
-          "price": 6,
-          "subtotal": 120
-        }
-      ],
-      "delivery": 10,
-      "total": 430,
-      "paid": 0
-    },
-    {
-      "id": "1003",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ahsan Zafar",
-        "phone": "333-678",
-        "email": ""
-      },
-      "items": [
-        {
-          "name": "Mosaic cake",
-          "qty": 1,
-          "price": 60,
-          "subtotal": 60
-        }
-      ],
-      "delivery": 0,
-      "total": 60,
-      "paid": 0
-    },
-    {
-      "id": "1004",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ahsan Zafar",
-        "phone": "333-678",
-        "email": ""
-      },
-      "items": [
-        {
-          "name": "criossant",
-          "qty": 5,
-          "price": 5,
-          "subtotal": 25
-        }
-      ],
-      "delivery": 5,
-      "total": 30,
-      "paid": 0
-    },
-    {
-      "id": "1005",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ahsan Zafar",
-        "phone": "333-678",
-        "email": ""
-      },
-      "items": [
-        {
-          "name": "Espresso",
-          "qty": 1,
-          "price": 3,
-          "subtotal": 3
-        }
-      ],
-      "delivery": 0,
-      "total": 3,
-      "paid": 0
-    },
-    {
-      "id": "1006",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ayesha Khayam",
-        "phone": "4438256690",
-        "email": "ahsan.zafar@gmail.com"
-      },
-      "items": [
-        {
-          "name": "Haraz Latte",
-          "qty": 1,
-          "price": 5.5,
-          "subtotal": 5.5
-        }
-      ],
-      "delivery": 10,
-      "total": 15.5,
-      "paid": 0
-    },
-    {
-      "id": "INV-621530",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ayesha Khayam",
-        "phone": "4438256690",
-        "email": "ahsan.zafar@gmail.com"
-      },
-      "items": [
-        {
-          "name": "Haraz Latte",
-          "qty": 1,
-          "price": 5.5,
-          "subtotal": 5.5
-        }
-      ],
-      "delivery": 0,
-      "total": 5.5,
-      "paid": 0
-    },
-    {
-      "id": "INV-793406",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ayesha Khayam",
-        "phone": "4438256690",
-        "email": "ahsan.zafar@gmail.com"
-      },
-      "items": [
-        {
-          "name": "bee bites",
-          "qty": 1,
-          "price": 45,
-          "subtotal": 45
-        }
-      ],
-      "delivery": 0,
-      "total": 45,
-      "paid": 0
-    },
-    {
-      "id": "INV-215953",
-      "date": "1/19/2026",
-      "customer": {
-        "name": "Ayesha Khayam",
-        "phone": "4438256690",
-        "email": "ahsan.zafar@gmail.com"
-      },
-      "items": [
-        {
-          "name": "Mocha",
-          "qty": 1,
-          "price": 6,
-          "subtotal": 6
-        }
-      ],
-      "delivery": 0,
-      "total": 6,
-      "paid": 0
-    }
-  ],
-  "payments": [
-    {
-      "id": 1768775262429,
-      "empId": "1768774653204",
-      "amount": 0.41,
-      "date": "2026-01-18T22:27:42.429Z"
-    },
-    {
-      "id": 1768799509595,
-      "empId": "1768774824467",
-      "amount": 1.65,
-      "date": "2026-01-19T05:11:49.595Z"
-    },
-    {
-      "id": 1768803106560,
-      "empId": "1768774653204",
-      "amount": 2.63,
-      "date": "2026-01-19T06:11:46.560Z"
-    },
-    {
-      "id": 1768803115954,
-      "empId": "1768799645965",
-      "amount": 0.19,
-      "date": "2026-01-19T06:11:55.954Z"
-    },
-    {
-      "id": 1768803419187,
-      "empId": "1768774653204",
-      "amount": 17.14,
-      "date": "2026-01-19T06:16:59.187Z"
-    },
-    {
-      "id": 1768803431747,
-      "empId": "1768774824467",
-      "amount": 116.8,
-      "date": "2026-01-19T06:17:11.747Z"
-    },
-    {
-      "id": 1768805871684,
-      "empId": "1768774653204",
-      "amount": 1.45,
-      "date": "2026-01-19T06:57:51.684Z"
-    },
-    {
-      "id": 1768805880447,
-      "empId": "1768774824467",
-      "amount": 0.04,
-      "date": "2026-01-19T06:58:00.447Z"
-    },
-    {
-      "invoiceId": "1000",
-      "amount": 1000,
-      "date": "1/19/2026"
-    }
-  ]
+  "history": [],
+  "settings": {
+    "budget": 10000,
+    "spend": 0,
+    "threshold": 20,
+    "email": "admin@harazcoffee.com"
+  },
+  "orders": []
 }
