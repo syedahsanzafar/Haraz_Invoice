@@ -911,18 +911,6 @@
       "supplier": "-",
       "price": 0,
       "link": ""
-    },
-    {
-      "id": 1768999457964,
-      "name": "lala",
-      "category": "Dairy",
-      "stock": 2,
-      "unit": "boxes",
-      "min": 1,
-      "usageDays": 0,
-      "supplier": "-",
-      "price": 0,
-      "link": ""
     }
   ],
   "history": [],
