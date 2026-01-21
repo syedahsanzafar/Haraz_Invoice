@@ -40,7 +40,7 @@
       "id": 1768935851547,
       "name": "Haraz Cup Jackets for 10-24oz cup ",
       "category": "Packaging",
-      "stock": 1,
+      "stock": 2,
       "unit": "boxes",
       "min": 3,
       "usageDays": 7,
@@ -80,18 +80,6 @@
       "unit": "boxes",
       "min": 1,
       "usageDays": 20,
-      "supplier": "Haraz Online Store",
-      "price": 0,
-      "link": ""
-    },
-    {
-      "id": 1768936273631,
-      "name": "Haraz Cup Jackets 8oz?",
-      "category": "Packaging",
-      "stock": 1,
-      "unit": "boxes",
-      "min": 1,
-      "usageDays": 15,
       "supplier": "Haraz Online Store",
       "price": 0,
       "link": ""
