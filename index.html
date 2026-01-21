@@ -1,573 +1,165 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Haraz Coffee House - Smart Inventory System</title>
-
-    <!-- PWA Meta Tags -->
-    <meta name="description" content="Smart Inventory Management System for Haraz Coffee House">
-    <meta name="theme-color" content="#5c4033">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Haraz Inventory">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./icon-192.png">
-
-    <!-- Fonts -->
+    <title>Haraz Coffee House | Invoice Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
-    <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Charts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Excel Export -->
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="logo_cinv.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <style>
         :root {
-            --primary: #5c4033;
-            /* Coffee Dark */
-            --secondary: #d4af37;
-            /* Gold */
-            --accent: #a67c52;
-            /* Coffee Light */
+            --primary-color: #d1b894;
+            /* Haraz Coffee Goldish/Coffee tone */
+            --secondary-color: #2c1810;
+            /* Dark Coffee */
+            --accent-color: #e07a5f;
             --bg-dark: #121212;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f5f5f5;
-            --text-dim: #b3b3b3;
-            --danger: #ff4d4d;
-            --success: #00e676;
-            --warning: #ffab00;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --sidebar-width: 280px;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 50%, #1a1512 0%, #0c0c0c 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            overflow-x: hidden;
-            /* Support for iOS Safe Areas (Notch) */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        .font-heading {
             font-family: 'Outfit', sans-serif;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background: rgba(18, 18, 18, 0.8);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--glass-border);
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
             height: 100vh;
-            position: fixed;
-            display: flex;
-            flex-direction: column;
-            padding: calc(2rem + env(safe-area-inset-top)) 1rem 2rem 1rem;
-            z-index: 100;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 3rem;
-            padding-left: 0.5rem;
-        }
-
-        .brand-logo {
-            width: 40px;
-            height: 40px;
-            background: var(--secondary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-        }
-
-        .brand-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--secondary);
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-dim);
-            text-decoration: none;
-        }
-
-        .nav-item:hover {
-            background: var(--glass-bg);
-            color: var(--text-main);
-        }
-
-        .nav-item.active {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            box-shadow: 0 4px 15px rgba(92, 64, 51, 0.3);
-        }
-
-        .nav-item i {
-            width: 20px;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 2rem;
-            max-width: 1400px;
-            width: 100%;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .page-title h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-title p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--glass-bg);
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .db-status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--glass-bg);
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--text-dim);
-            transition: all 0.3s ease;
-        }
-
-        .status-dot.online {
-            background: var(--success);
-            box-shadow: 0 0 8px var(--success);
-        }
-
-        .status-dot.offline {
-            background: var(--danger);
-            box-shadow: 0 0 8px var(--danger);
-        }
-
-        .status-dot.syncing {
-            background: var(--warning);
-            animation: pulse-sync 1s infinite alternate;
-        }
-
-        @keyframes pulse-sync {
-            from {
-                opacity: 0.4;
-                transform: scale(0.8);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 1.5rem;
-            border-radius: 20px;
-            position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
         }
 
-        .stat-info span {
-            display: block;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-info h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-        }
-
-        /* Inventory View */
-        .inventory-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            gap: 1rem;
-        }
-
-        .search-box {
-            position: relative;
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .search-box input {
-            width: 100%;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 12px 16px 12px 48px;
-            border-radius: 12px;
-            color: white;
-            outline: none;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-            box-shadow: 0 4px 15px rgba(92, 64, 51, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-        }
-
-        .btn-outline:hover {
-            background: var(--glass-bg);
-        }
-
-        /* Table */
-        .card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 1.5rem;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        th {
-            text-align: left;
-            padding: 1rem;
-            color: var(--text-dim);
-            font-weight: 500;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        td {
-            padding: 1.25rem 1rem;
-            border-bottom: 1px solid var(--glass-border);
-            vertical-align: middle;
-        }
-
-        .item-row:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge-danger {
-            background: rgba(255, 77, 77, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(255, 77, 77, 0.2);
-        }
-
-        .badge-success {
-            background: rgba(0, 230, 118, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-        }
-
-        .badge-warning {
-            background: rgba(255, 171, 0, 0.1);
-            color: var(--warning);
-            border: 1px solid rgba(255, 171, 0, 0.2);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--glass-border);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 5px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--secondary);
-            transition: width 0.5s ease;
-        }
-
-        /* Counter UI */
-        .counter {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .counter-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .counter-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        /* Modal */
-        .modal-overlay {
+        #bg-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 1rem;
+            z-index: -1;
+            background: url(bg.png) center/cover no-repeat;
+            filter: brightness(0.3);
         }
 
-        .modal {
-            background: #1a1a1a;
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 600px;
-            padding: 2rem;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
             background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 12px;
-            border-radius: 10px;
-            color: white;
-            outline: none;
-        }
-
-        .form-group select option {
-            background: #1a1a1a;
-            color: white;
-        }
-
-        /* Stock Take View */
-        .stock-take-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .stock-item-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 1.5rem;
-            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            padding: 0;
+            /* Remove padding to handle header bg */
+            z-index: 10;
         }
 
-        .stock-item-card h3 {
-            font-size: 1.1rem;
-        }
-
-        .daily-input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            font-size: 1.5rem;
+        .brand {
+            padding: 40px 20px;
             text-align: center;
-            font-weight: 700;
-            color: var(--secondary);
-            outline: none;
+            background: url(bg.png) center/cover no-repeat;
+            position: relative;
+            border-bottom: 2px solid var(--primary-color);
         }
 
-        /* Charts Section */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+        .brand::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
         }
 
-        .heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 8px;
+        .brand img,
+        .brand h1 {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .brand img {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 0 10px var(--primary-color));
+        }
+
+        .brand h1 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
             margin-top: 10px;
         }
 
-        .heatmap-cell {
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .nav-menu {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
-        .heatmap-cell:hover {
-            transform: scale(1.05);
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            box-shadow: 0 4px 15px rgba(209, 184, 148, 0.3);
         }
 
-        /* Animations */
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -580,1801 +172,776 @@
             }
         }
 
-        .animated {
-            animation: fadeIn 0.4s ease forwards;
+        /* Cards & Components */
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(5px);
+            margin-bottom: 20px;
         }
 
-        /* Hide sections */
-        .section {
-            display: none;
-            opacity: 0;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .section.active {
+        .stat-card {
+            background: linear-gradient(135deg, rgba(209, 184, 148, 0.1), rgba(44, 24, 16, 0.4));
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
             display: block;
-            opacity: 1;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
-        /* Notification */
-        #notification-toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--primary);
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
             color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 2000;
-            border: 1px solid var(--secondary);
+            outline: none;
         }
 
-        /* Mobile adjustments */
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        select.form-control option {
+            background-color: var(--secondary-color);
+            color: var(--text-primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(209, 184, 148, 0.4);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Print Invoice Styles */
+        /* Print Invoice Styles */
+        #print-area {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+            background: white !important;
+            color: black !important;
+            padding: 40px;
+            width: 800px;
+            /* min-height removed to fit single page */
+            height: auto;
+            font-size: 14pt;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+
+        #print-area * {
+            color: black !important;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .invoice-header img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        .invoice-header h2 {
+            margin: 0;
+            font-size: 24pt;
+        }
+
+        .invoice-header p {
+            margin: 5px 0;
+            font-size: 14pt;
+            color: #444;
+        }
+
+        .customer-section {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .dash-separator {
+            border: none;
+            border-top: 2px dashed #000;
+            margin: 15px 0;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .invoice-table th {
+            text-align: left;
+            padding: 10px 5px;
+            border-bottom: 1px solid #000;
+            font-weight: bold;
+        }
+
+        .invoice-table td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-footer {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .invoice-footer p {
+            margin: 10px 0;
+        }
+
+        .grand-total {
+            font-size: 18pt;
+            font-weight: bold;
+            border-top: 2px solid #000;
+            display: inline-block;
+            padding-top: 10px;
+        }
+
+        /* Mobile Menu Styles */
+        #menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2000;
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-size: 1.2rem;
+        }
+
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            backdrop-filter: blur(2px);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
-                display: none;
+                position: fixed;
+                left: -100%;
+                top: 0;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s ease-in-out;
+                width: 250px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            #sidebar-overlay.active {
+                display: block;
             }
 
             .main-content {
-                margin-left: 0;
-                padding: 1rem;
-                padding-bottom: 80px;
-                /* Space for bottom nav */
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding-top: 60px;
+                /* Space for toggle button */
             }
 
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+            #menu-toggle {
+                display: block;
             }
-
-            .user-profile {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .stat-card {
-                padding: 1rem;
-            }
-
-            .stat-info h2 {
-                font-size: 1.25rem;
-            }
-
-            .inventory-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .search-box {
-                max-width: none;
-            }
-
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-
-            /* Bottom Navigation for Mobile */
-            .mobile-nav {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: rgba(18, 18, 18, 0.95);
-                backdrop-filter: blur(10px);
-                border-top: 1px solid var(--glass-border);
-                justify-content: space-around;
-                padding: 10px 0 calc(10px + env(safe-area-inset-bottom)) 0;
-                z-index: 1000;
-            }
-
-            .mobile-nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
-                color: var(--text-dim);
-                font-size: 0.7rem;
-                cursor: pointer;
-            }
-
-            .mobile-nav-item.active {
-                color: var(--secondary);
-            }
-
-            .mobile-nav-item i {
-                width: 20px;
-                height: 20px;
-            }
-
-            /* Table responsiveness */
-            .card {
-                overflow-x: auto;
-            }
-
-            table {
-                min-width: 600px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .mobile-nav {
-                display: none;
-            }
-        }
-
-        .nav-item,
-        .mobile-nav-item,
-        .btn,
-        .counter-btn,
-        .stat-card,
-        #alert-trigger {
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            user-select: none;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--glass-border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent);
         }
     </style>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #print-area,
+            #print-area * {
+                visibility: visible;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+                display: block !important;
+            }
+
+            /* Hide non-printable elements */
+            .sidebar,
+            .main-content,
+            #sync-status,
+            #connection-status-bar,
+            .modal,
+            .btn {
+                display: none !important;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body onclick="">
-
-    <!-- Sidebar -->
-    <nav class="sidebar">
+<body>
+    <div id="bg-container"></div>
+    <!-- Top Connection Status Bar -->
+    <div id="connection-status-bar"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 5px; z-index: 10002; transition: all 0.3s ease; background: #10b981;">
+        <div id="connection-text"
+            style="display: none; text-align: center; padding: 5px; font-size: 0.8rem; font-weight: bold; color: white;">
+            Online
+        </div>
+    </div>
+    <!-- Mobile Menu Toggle Button --><button id="menu-toggle" onclick="toggleMobileMenu()"><i
+            class="fas fa-bars"></i></button>
+    <!-- Overlay for closing sidebar -->
+    <div id="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+    <aside class="sidebar">
         <div class="brand">
-            <div class="brand-logo">
-                <i data-lucide="coffee"></i>
+            <svg viewBox="0 0 5857.04 2121.18" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"
+                style="width: 140px; height: auto; position: relative; z-index: 2; filter: drop-shadow(0 0 10px var(--primary-color));">
+                <style type="text/css">
+                    .fil0 {
+                        fill: #CCAD6A
+                    }
+
+                    .fnt0 {
+                        font-weight: normal;
+                        font-size: 533.18px;
+                        font-family: 'Outfit', sans-serif
+                    }
+                </style>
+                <g id="Layer_x0020_1">
+                    <g transform="matrix(1.26976 0 0 1 -3014.64 -1519.68)">
+                        <text x="3515.87" y="3152.24" class="fil0 fnt0">COFFEE HOUSE</text>
+                    </g>
+                    <g id="_2126649038832">
+                        <path class="fil0"
+                            d="M3591.98 358.72c140.77,-11.43 205.66,19.59 204.2,162.85 -1.43,140.13 -69.79,164.34 -204.53,165.68l0.33 -328.52zm-170.85 -82.1c-5.37,19.71 -1.98,367.8 -1.98,419.18 0,139.68 -2.68,282 0.27,421.35l172.36 0.91 -0.1 -347.18 55.28 0.2 71.62 132.39c24.12,44.65 50.72,89.49 79.76,127.74 28.85,38 63.84,75.24 118.83,88.63 42.47,10.34 151.16,11.67 184.37,-7.93 5.3,-12.44 2.28,-36.99 2.07,-53.31 -84.14,-5.33 -128.55,-60.93 -175,-127.17 -12.73,-18.16 -104.7,-164.75 -112.92,-188.58 8.21,-6.93 35.31,-19.36 47.51,-27.22 144.05,-92.86 130.4,-293.96 62.34,-364.67 -106.03,-110.15 -324.5,-84.36 -504.42,-74.3z" />
+                        <path class="fil0"
+                            d="M2036.78 275.45c-9.81,39.29 5.53,342.14 -3.86,369.95l-379.18 0.23c-7.83,-24.3 2,-308.08 -2.66,-369.79l-169.54 -0.39 -0.8 842.93 171.71 0.09 1.1 -378.19 378.81 -0.74 0.49 377.88 172.37 0.98 0.88 -842.44 -169.31 -0.51z" />
+                        <path class="fil0"
+                            d="M2649.4 753.18c6.6,-19.34 121.52,-343.43 131.86,-354.4 6.76,9.04 119.23,328.76 124.99,355.2l-256.85 -0.8zm-240.72 364.86l106.84 0.38 77.48 -209.84c6.55,-17.77 18.21,-55.65 26.4,-70.2l313.97 -3.83c6.2,8.73 88.73,251.16 100.3,283.7l183.44 -0.23c-0.76,-11.84 -70.47,-198.52 -76.16,-214.79l-155.84 -433.35c-10.31,-28.01 -71.83,-206.2 -79.4,-215.78 -47.19,8.19 -94.86,17.66 -143.17,24.73 -27.6,4.04 -20.97,0.08 -39.09,46.68 -8.06,20.74 -16.29,40.2 -24.54,61.2 -29.94,76.26 -289.68,715.09 -290.25,731.33z" />
+                        <path class="fil0"
+                            d="M4532.62 419.76c1.33,-3.64 2.85,-9.26 4.28,-12.35l4.69 -7.15c0.2,-1.01 0.94,-1.11 1.49,-1.59 6.2,9.31 119.8,332.17 124.72,355.31l-256.84 -0.78 121.65 -333.44zm-29.66 -137.32c-14.42,25.9 -29.06,70.35 -41.86,101.96l-209.31 523.74c-11.78,30.07 -80.67,194.22 -81.96,210.03l107.04 0.2c18.94,-39.89 93.57,-262.41 104.27,-280.12l315.53 -3.28 98.19 283.35 184.11 0.22c-2.34,-14.06 -12.28,-37.44 -17.82,-52.51l-293.6 -810.9 -164.59 27.32z" />
+                        <path class="fil0"
+                            d="M5157.32 361.64l388.3 5.17c-2.24,15.12 -93.1,157.79 -108.34,183.45l-111.27 181.71c-33.89,51.8 -76.55,126.99 -111.03,182.12l-82.99 135.68c-10.01,16.99 -8.1,47.87 -4.71,68.21 148.82,2.76 314.45,8.12 461.27,8.17 96.15,0.03 158.72,2.6 228.73,-79.98 12.87,-15.18 33.64,-49.09 39.76,-65.48 -6.43,-8.96 -34.97,-30.44 -41.68,-33.43 -24.05,13.08 -42.56,78.58 -199.11,82.59 -89.07,2.29 -193.26,4.26 -281.69,0.4l386.74 -641.55c10.38,-16.66 18.23,-30.65 28.19,-46.33 10.37,-16.33 9.72,-41.8 7.09,-66.66l-552.47 -0.26c-39.7,0 -33.3,-7.94 -38.68,27.68 -2.81,18.59 -7.43,39.45 -8.12,58.53z" />
+                        <path class="fil0"
+                            d="M2036.78 275.45c-4.74,2.11 -5.78,-3.19 -6.09,19.16 -0.1,7.15 0.29,15.05 0.38,22.29 0.69,54.1 2.79,311.6 -1.55,324.39l-371.5 0.35c-0.38,-1.23 -0.82,-3.03 -0.93,-2.66l-2.29 -39.98c0.07,-88.2 -2.85,-218.99 0.21,-301.59 0.93,-25.18 1.71,-17.58 -3.92,-21.57 4.66,61.71 -5.18,345.49 2.66,369.79l379.18 -0.23c9.39,-27.82 -5.95,-330.67 3.86,-369.95z" />
+                    </g>
+                    <g id="_2126649040560">
+                        <path class="fil0"
+                            d="M957.57 1131.36c-101.7,-265.01 -201.78,-326.7 -356.65,-490.53 -102.32,-108.23 -149.45,-162.35 -202.86,-306.35 -92.88,25.3 -180.78,194.19 -144.96,335.37 28.74,113.26 242.77,370.3 314.75,444.88 92.41,95.74 154.43,166.45 205.76,304.25 39.55,106.18 14.75,146.23 17.64,195.7 1.19,20.33 0.94,14.32 4.61,21.9 196.9,-195.27 23.77,-468.36 -111.99,-632.23l-162.41 -175.91c-67.83,-68.48 -241,-270.79 -155.28,-390.54 19.36,30.78 31.16,88.87 45.85,123.45 54.34,127.91 198.39,244.42 317.78,383.67 56.57,65.98 116.99,119.7 158.52,203.09 21.19,42.56 29.76,91.03 50.75,131.36 74.87,-63.27 137.29,-208.8 131.75,-357.75 -5.15,-138.34 -90.64,-261.49 -149.48,-339.26 -103.72,-137.11 -300.43,-312.4 -361.93,-487.58 -11.65,-33.19 -10.76,-68.55 -27.98,-94.87 -234.53,294.71 383.06,629.84 453.41,952.41 7.04,32.27 8.19,62.3 5.69,95.33l-16.11 62.75c-11.98,20.44 -3.55,8.05 -16.86,20.86z" />
+                        <path class="fil0"
+                            d="M657.33 1890.32c66.69,-51.12 86.54,-257.14 61.72,-356.08 -56.19,-224 -195.79,-320.28 -271.31,-408.92 -68.92,-80.89 -221.84,-218.59 -251.78,-313.53 -24.61,-42.51 -9.34,-58.16 -33.78,-91.97 -66.67,275.26 -26.53,341.41 227.61,570.34 158.04,142.36 254.45,296.48 267.54,600.16z" />
+                        <path class="fil0"
+                            d="M508.87 2121.18c128.75,-152.85 69,-393.05 -26.62,-546.82l-343 -388.5 24.44 255.99c87.27,138.87 290.44,181.49 345.17,679.33z" />
+                        <path class="fil0"
+                            d="M105.32 1375.26l-11.85 -215.08c-0.72,-13.12 -41.13,-58.64 -60.62,-158.03 -87.18,160.41 21.09,314.77 72.48,373.11z" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item"><a class="nav-link active" data-tab="dashboard"><i
+                        class="fas fa-chart-pie"></i>Dashboard </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="invoice"><i class="fas fa-file-invoice-dollar"></i>New
+                    Invoice </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="reports"><i class="fas fa-chart-line"></i>Reports </a>
             </div>
-            <span class="brand-name">HARAZ COFFEE</span>
-        </div>
-        <ul class="nav-links">
-            <li class="nav-item active" onclick="showSection('dashboard', this)" role="button" tabindex="0">
-                <i data-lucide="layout-dashboard"></i>
-                <span>Dashboard</span>
-            </li>
-            <li class="nav-item" onclick="showSection('inventory', this)" role="button" tabindex="0">
-                <i data-lucide="package"></i>
-                <span>Inventory</span>
-            </li>
-            <li class="nav-item" onclick="showSection('stocktake', this)" role="button" tabindex="0">
-                <i data-lucide="clipboard-check"></i>
-                <span>Stock Audit</span>
-            </li>
-            <li class="nav-item" onclick="showSection('procurement', this)" role="button" tabindex="0">
-                <i data-lucide="shopping-cart"></i>
-                <span>Procurement</span>
-            </li>
-            <li class="nav-item" onclick="showSection('analytics', this)" role="button" tabindex="0">
-                <i data-lucide="history"></i>
-                <span>Purchase History</span>
-            </li>
-            <li class="nav-item" onclick="showSection('settings', this)" role="button" tabindex="0">
-                <i data-lucide="settings"></i>
-                <span>Settings</span>
-            </li>
-        </ul>
-
-        <div style="margin-top: auto; padding: 1rem;">
-            <div
-                style="background: var(--glass-bg); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border);">
-                <p style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px;">MONTHLY BUDGET</p>
-                <div class="progress-bar">
-                    <div id="budget-progress" class="progress-fill" style="width: 0%;"></div>
-                </div>
-                <p style="font-size: 0.8rem; font-weight: 600;" id="budget-text">$ 0 / 0</p>
+            <div class="nav-item"><a class="nav-link" data-tab="payments"><i
+                        class="fas fa-hand-holding-usd"></i>Payments </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="customers"><i class="fas fa-users"></i>Customers
+                </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="inventory"><i class="fas fa-boxes"></i>Inventory
+                </a></div>
+            <div class="nav-item"><a class="nav-link" data-tab="system"><i class="fas fa-cogs"></i>System </a>
             </div>
-        </div>
-    </nav>
-
-    <!-- Mobile Bottom Nav -->
-    <div class="mobile-nav">
-        <div class="mobile-nav-item active" onclick="showSection('dashboard', this)" role="button" tabindex="0">
-            <i data-lucide="layout-dashboard"></i>
-            <span>Home</span>
-        </div>
-        <div class="mobile-nav-item" onclick="showSection('inventory', this)" role="button" tabindex="0">
-            <i data-lucide="package"></i>
-            <span>Stock</span>
-        </div>
-        <div class="mobile-nav-item" onclick="showSection('stocktake', this)" role="button" tabindex="0">
-            <i data-lucide="clipboard-check"></i>
-            <span>Audit</span>
-        </div>
-        <div class="mobile-nav-item" onclick="showSection('procurement', this)" role="button" tabindex="0">
-            <i data-lucide="shopping-cart"></i>
-            <span>Buy</span>
-        </div>
-        <div class="mobile-nav-item" onclick="showSection('settings', this)" role="button" tabindex="0">
-            <i data-lucide="settings"></i>
-            <span>Settings</span>
-        </div>
-    </div>
-
-    <!-- Main Content -->
+        </nav>
+        <div style="font-size: 0.8rem; color: var(--text-secondary); text-align: center;">&copy;
+            2026 Haraz Coffee </div>
+    </aside>
     <main class="main-content">
-        <header>
-            <div class="page-title">
-                <h1 id="view-title">Dashboard</h1>
-                <p id="view-subtitle">Welcome back, Haraz Manager</p>
-            </div>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div class="db-status-indicator" id="cloud-status-box">
-                    <span class="status-dot" id="cloud-status-dot"></span>
-                    <span id="cloud-status-text">Checking Cloud...</span>
-                </div>
-                <div class="user-profile">
-                    <div id="alert-trigger" style="position: relative; cursor: pointer;"
-                        onclick="handleNotificationClick()">
-                        <i data-lucide="bell" style="width: 20px;"></i>
-                        <span id="notification-dot"
-                            style="position: absolute; top: -5px; right: -5px; background: var(--danger); width: 8px; height: 8px; border-radius: 50%; display: none;"></span>
-                    </div>
-                    <div
-                        style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                        H</div>
-                    <span>Haraz Admin</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- DASHBOARD SECTION -->
-        <div id="dashboard" class="section active animated">
+        <!-- Dashboard Tab -->
+        <section id="dashboard" class="tab-pane active">
+            <h2 style="margin-bottom: 20px;">Performance Analytics</h2>
             <div class="stats-grid">
-                <div class="stat-card" style="cursor: pointer;" onclick="navigateToSection('inventory')">
-                    <div class="stat-icon" style="background: rgba(0, 230, 118, 0.1); color: var(--success);">
-                        <i data-lucide="package"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span>Total Items</span>
-                        <h2 id="stat-total-items">0</h2>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-total-sale">$0.00</div>
+                    <div class="stat-label">Total Sales</div>
                 </div>
-                <div class="stat-card" style="cursor: pointer;" onclick="navigateToSection('procurement')">
-                    <div class="stat-icon" style="background: rgba(255, 77, 77, 0.1); color: var(--danger);">
-                        <i data-lucide="alert-triangle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span>Low Stock</span>
-                        <h2 id="stat-low-stock">0</h2>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-total-credit">$0.00</div>
+                    <div class="stat-label">Total Credit</div>
                 </div>
-                <div class="stat-card" style="cursor: pointer;" onclick="navigateToSection('analytics')">
-                    <div class="stat-icon" style="background: rgba(212, 175, 55, 0.1); color: var(--secondary);">
-                        <i data-lucide="trending-up"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span>Monthly Spend</span>
-                        <h2 id="stat-month-spend">$ 0</h2>
-                    </div>
-                </div>
-                <div class="stat-card" style="cursor: pointer;" onclick="navigateToSection('procurement')">
-                    <div class="stat-icon" style="background: rgba(166, 124, 82, 0.1); color: var(--accent);">
-                        <i data-lucide="clock"></i>
-                    </div>
-                    <div class="stat-info">
-                        <span>Pending Orders</span>
-                        <h2 id="stat-pending-orders">0</h2>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="dash-customer-count">0</div>
+                    <div class="stat-label">Customers</div>
                 </div>
             </div>
-
-            <div class="charts-grid">
-                <!-- 1. Inventory Health -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Inventory Health (Stock vs. Min)</h3>
-                    <canvas id="healthChart" height="250"></canvas>
+                    <h3>Sales Overview (Bar)</h3>
+                    <div style="height: 300px;"><canvas id="salesBarChart"></canvas></div>
                 </div>
-
-                <!-- 2. Items Requiring Reorder -->
                 <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Items Requiring Reorder</h3>
-                    <canvas id="reorderChart" height="250"></canvas>
-                </div>
-
-                <!-- 3. Stock Distribution -->
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Category Distribution</h3>
-                    <div style="height: 250px; display: flex; justify-content: center;">
-                        <canvas id="categoryChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- 4. Supplier Reliance -->
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Supplier Reliance</h3>
-                    <canvas id="supplierChart" height="250"></canvas>
-                </div>
-
-                <!-- 5. Stock Level Heatmap -->
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Stock Status Heatmap</h3>
-                    <div id="stock-heatmap" class="heatmap-grid">
-                        <!-- Heatmap cells will be injected here -->
-                    </div>
-                </div>
-
-                <!-- Stock Alerts (Keeping it as it's useful) -->
-                <div class="card">
-                    <h3 style="margin-bottom: 1rem;">Priority Stock Alerts</h3>
-                    <div id="dashboard-alerts" style="display: flex; flex-direction: column; gap: 1rem;">
-                        <!-- Alerts will be injected here -->
-                    </div>
+                    <h3>Payment Status (Pie)</h3>
+                    <div style="height: 300px;"><canvas id="balancePieChart"></canvas></div>
                 </div>
             </div>
-        </div>
-
-        <!-- INVENTORY SECTION -->
-        <div id="inventory" class="section animated">
-            <div class="inventory-controls">
-                <div class="search-box">
-                    <i data-lucide="search"></i>
-                    <input type="text" placeholder="Search items..." onkeyup="filterInventory(this.value)">
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-outline" onclick="openModal('categoryModal')">
-                        <i data-lucide="layers"></i> Category Management
-                    </button>
-                    <button class="btn btn-outline" onclick="exportToExcel()">
-                        <i data-lucide="file-spreadsheet"></i> Export to Excel
-                    </button>
-                    <button class="btn btn-primary" onclick="openModal('addItemModal')">
-                        <i data-lucide="plus"></i> Add New Item
-                    </button>
-                </div>
-            </div>
-
+        </section>
+        <!-- Invoice Tab -->
+        <section id="invoice" class="tab-pane">
+            <h2>Generate New Invoice</h2>
             <div class="card">
-                <table>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="form-group"><label>Customer Name</label><input type="text" id="invoice-customer-name"
+                            class="form-control" list="customer-list" placeholder="Enter or select name"><datalist
+                            id="customer-list"></datalist>
+                    </div>
+                    <div class="form-group"><label>Customer Phone</label><input type="text" id="invoice-customer-phone"
+                            class="form-control" placeholder="Phone number">
+                    </div>
+                </div>
+                <hr style="opacity: 0.1; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 0.5fr; gap: 15px; align-items: end;">
+                    <div class="form-group"><label>Item Name</label><input type="text" id="invoice-item-name"
+                            class="form-control" list="inventory-items-list"
+                            placeholder="Enter or select item"><datalist id="inventory-items-list"></datalist></div>
+                    <div class="form-group"><label>Qty</label><input type="number" id="invoice-item-qty"
+                            class="form-control" value="1"></div>
+                    <div class="form-group"><label>Price</label><input type="number" id="invoice-item-price"
+                            class="form-control" step="0.01"></div><button class="btn btn-primary"
+                        onclick="addInvoiceItem()" style="height: 45px;"><i class="fas fa-plus"></i></button>
+                </div>
+                <table id="invoice-items-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Item Name</th>
-                            <th>Category</th>
-                            <th>Current Stock</th>
-                            <th>Unit</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventory-table-body">
-                        <!-- Inventory items will be injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- STOCK TAKE SECTION -->
-        <div id="stocktake" class="section animated">
-            <div class="card" style="margin-bottom: 2rem; height: auto;">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <h2>Physical Stock Audit</h2>
-                        <p style="color: var(--text-dim); margin-top: 5px;">Enter the actual count found on the shelf.
-                        </p>
-                    </div>
-                    <button class="btn btn-primary" onclick="processStockTake()">
-                        <i data-lucide="check-circle"></i> Save Audit
-                    </button>
-                </div>
-            </div>
-
-            <div class="stock-take-grid" id="stock-take-grid">
-                <!-- Stock take items will be injected here -->
-            </div>
-        </div>
-
-        <!-- PROCUREMENT SECTION -->
-        <div id="procurement" class="section animated">
-            <div class="inventory-controls">
-                <h2>Smart Procurement</h2>
-                <button class="btn btn-primary" onclick="generateDraftOrders()">
-                    <i data-lucide="refresh-cw"></i> Refresh Drafts
-                </button>
-            </div>
-
-            <div id="draft-orders-container"
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                <!-- Draft orders will be injected here -->
-            </div>
-
-            <div class="inventory-controls" id="pending-orders-header">
-                <h2>Pending Deliveries</h2>
-            </div>
-            <div id="pending-orders-container"
-                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 1.5rem;">
-                <!-- Pending orders will be injected here -->
-            </div>
-        </div>
-
-        <div id="analytics" class="section animated">
-            <div class="card">
-                <h3>Recent Purchase History</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
                             <th>Item</th>
-                            <th>Supplier</th>
-                            <th>Quantity</th>
-                            <th>Total Cost</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+                    <div style="width: 300px;">
+                        <div class="form-group"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <label>Delivery Charges</label><input type="number" id="invoice-delivery"
+                                class="form-control" value="0" style="width: 100px;">
+                        </div>
+
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 1.5rem; color: var(--primary-color); font-weight: 700;">
+                            <span>Total</span><span id="invoice-total-display">$0.00</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateInvoice()"
+                            style="width: 100%; margin-top: 20px; font-size: 1.1rem;"><i class="fas fa-print"></i>
+                            Print Invoice / Save PDF </button>
+                    </div>
+                </div>
+        </section>
+        <!-- Reports Tab -->
+        <section id="reports" class="tab-pane">
+            <h2>Financial Reports</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="report-total-sale">$0.00</div>
+                    <div class="stat-label">Total Sale</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="report-total-credit">$0.00</div>
+                    <div class="stat-label">Total Credit</div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>All Generated Invoices</h3>
+                <table id="all-invoices-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Credit</th>
+                            <th>Action</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Payments Tab -->
+        <section id="payments" class="tab-pane">
+            <h2>Receive Payments</h2>
+            <div class="card">
+                <div class="form-group"><label>Select Customer</label><select id="payment-customer" class="form-control"
+                        onchange="loadCustomerInvoices()">
+                        <option value="">Select Customer</option>
+                    </select></div>
+                <div id="customer-credit-info" style="margin-top: 20px;">
+                    <!-- Loaded dynamically -->
+                </div>
+                <div style="margin-top: 20px; display: none;" id="payment-form">
+                    <div class="form-group"><label>Select Invoice to Pay</label><select id="payment-invoice"
+                            class="form-control"></select></div>
+                    <div class="form-group"><label>Amount to Pay</label><input type="number" id="payment-amount"
+                            class="form-control"></div><button class="btn btn-primary" onclick="processPayment()">Record
+                        Payment</button>
+                </div>
+            </div>
+        </section>
+        <!-- Customers Tab -->
+        <section id="customers" class="tab-pane">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Manage Customers</h2><button class="btn btn-primary" onclick="openCustomerModal()"><i
+                        class="fas fa-plus"></i>Add
+                    Customer</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="purchase-history-body">
-                        <!-- History rows -->
-                    </tbody>
+                    <tbody id="customers-list-table"></tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- SETTINGS SECTION -->
-        <div id="settings" class="section animated">
-            <div class="card" style="max-width: 800px; height: auto;">
-                <h3 style="margin-bottom: 1.5rem;">System Configuration</h3>
-                <div class="form-group">
-                    <label>Monthly Purchase Budget ($)</label>
-                    <input type="number" id="setting-budget" value="1000" onchange="updateSettings()">
-                </div>
-                <div class="form-group">
-                    <label>Low Stock Warning Level (%)</label>
-                    <input type="number" id="setting-threshold" value="20" onchange="updateSettings()">
-                </div>
-                <div class="form-group">
-                    <label>Admin Notification Email</label>
-                    <input type="email" id="setting-email" value="admin@harazcoffee.com" onchange="updateSettings()">
-                </div>
-                <div class="form-group">
-                    <label>GitHub Personal Access Token</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="password" id="setting-github-token" placeholder="ghp_xxxxxxxxxxxx"
-                            style="flex: 1;">
-                        <button class="btn btn-primary" onclick="saveGithubToken()">Save Token</button>
+        </section>
+        <!-- Inventory Tab -->
+        <section id="inventory" class="tab-pane">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Inventory Items</h2><button class="btn btn-primary" onclick="openInventoryModal()"><i
+                        class="fas fa-plus"></i>Add
+                    Item</button>
+            </div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price ($)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list-table"></tbody>
+                </table>
+            </div>
+        </section>
+        <!-- System Tab -->
+        <section id="system" class="tab-pane">
+            <h2>System & Database</h2>
+            <div class="card">
+                <div style="display: flex; flex-direction: column; gap: 20px; max-width: 400px;">
+                    <div>
+                        <h3>Backup Data</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Download your entire database as a JSON file.</p><button class="btn btn-primary"
+                            onclick="backupDatabase()"><i class="fas fa-download"></i>Save Database </button>
                     </div>
-                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 5px;">Required for syncing with
-                        GitHub. Enter once to enable cloud features.</p>
-                </div>
-                <hr style="border: 0; border-top: 1px solid var(--glass-border); margin: 1.5rem 0;">
-                <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-                    <button class="btn btn-primary" onclick="pushToCloud()">
-                        <i data-lucide="upload-cloud"></i> Upload to Cloud
-                    </button>
-                    <button class="btn btn-outline" onclick="pullFromCloud()">
-                        <i data-lucide="download-cloud"></i> Download from Cloud
-                    </button>
-                    <button class="btn btn-outline" onclick="exportData()">
-                        <i data-lucide="save"></i> Export Local JSON
-                    </button>
-                    <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">
-                        <i data-lucide="upload"></i> Restore Local JSON
-                    </button>
-                    <input type="file" id="import-file" style="display: none;" accept=".json"
-                        onchange="importData(event)">
-                    <button class="btn btn-outline" onclick="resetSystem()"
-                        style="color: var(--danger); border-color: var(--danger);">
-                        <i data-lucide="trash-2"></i> Reset System
-                    </button>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Restore Data</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Upload a previously saved JSON database file.</p><input type="file" id="restore-file"
+                            style="display: none;" onchange="restoreDatabase(event)"><button class="btn btn-primary"
+                            onclick="document.getElementById('restore-file').click()"><i
+                                class="fas fa-upload"></i>Restore from Database
+                        </button>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Cloud Sync</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Sync your data with the cloud.</p>
+                        <div style="display: flex; gap: 10px;"><button class="btn btn-primary"
+                                onclick="loadFromCloud()"><i class="fas fa-cloud-download-alt"></i>Load
+                            </button><button class="btn btn-primary" onclick="saveToCloud()"><i
+                                    class="fas fa-cloud-upload-alt"></i>Save
+                            </button></div>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Danger Zone</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Wipe all data from this browser (Customers, Inventory,
+                            Invoices).</p><button class="btn" style="background: #ef4444; color: white;"
+                            onclick="resetDatabase()"><i class="fas fa-trash-alt"></i>Reset All Data
+                        </button>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>GitHub Database</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Connect to your GitHub "Database" Server.</p>
+                        <div class="form-group"><label>GitHub Personal Access Token</label><input type="password"
+                                id="github-token" class="form-control" placeholder="ghp_..."></div><button
+                            class="btn btn-primary" onclick="saveGithubSettings()"><i class="fas fa-save"></i>Save Token
+                        </button>
+                    </div>
+                    <hr style="opacity: 0.1;">
+                    <div>
+                        <h3>Email Settings</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                            Configure sender credentials for emails.</p>
+                        <div class="form-group"><label>Sender Email</label><input type="email" id="sender-email"
+                                class="form-control" placeholder="your-email@example.com"></div>
+                        <div class="form-group"><label>App Password /
+                                Password</label><input type="password" id="sender-password" class="form-control"
+                                placeholder="App Password"></div><button class="btn btn-primary"
+                            onclick="saveEmailSettings()"><i class="fas fa-save"></i>Save Credentials </button>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        </section>
     </main>
-
-    <!-- Modal for Adding Item -->
-    <div id="addItemModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2 id="modal-title">Add New Item</h2>
-                <button onclick="closeModal('addItemModal')"
-                    style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button>
+    <!-- Modals -->
+    <div id="customer-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="customer-modal-title">Add Customer</h3>
+            <div class="form-group"><label>Name</label><input type="text" id="cust-name" class="form-control"></div>
+            <div class="form-group"><label>Phone Number</label><input type="text" id="cust-phone" class="form-control">
             </div>
-            <form id="add-item-form">
-                <input type="hidden" id="edit-item-id">
-                <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label>Item Name</label>
-                        <input type="text" id="new-item-name" required placeholder="e.g. Milk">
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select id="new-item-category">
-                            <!-- Options dynamically populated -->
-                        </select>
-                    </div>
-                </div>
-                <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label>Current Stock</label>
-                        <input type="number" id="new-item-stock" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label>Unit</label>
-                        <input type="text" id="new-item-unit" placeholder="Liters, kg, pcs">
-                    </div>
-                </div>
-                <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label>Minimum Threshold</label>
-                        <input type="number" id="new-item-min" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label>Usage (Days to last)</label>
-                        <input type="number" id="new-item-usage">
-                    </div>
-                </div>
-                <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label>Supplier Name</label>
-                        <input type="text" id="new-item-supplier">
-                    </div>
-                    <div class="form-group">
-                        <label>Current Price ($)</label>
-                        <input type="number" id="new-item-price" step="0.01">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Product Image (Home Only)</label>
-                    <div style="display: flex; gap: 1rem; align-items: start;">
-                        <input type="file" id="new-item-image" accept="image/*" style="flex:1"
-                            onchange="previewImage(this)">
-                        <div id="image-preview-container"
-                            style="width: 80px; height: 80px; border: 1px dashed var(--glass-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                            <span style="font-size: 0.6rem; color: var(--text-dim);">No Image</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Supplier Link</label>
-                    <input type="url" id="new-item-link" placeholder="https://supplier.com">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Item</button>
-            </form>
+            <div class="form-group"><label>Email</label><input type="email" id="cust-email" class="form-control">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;"><button class="btn"
+                    style="background: #444;" onclick="closeModals()">Cancel</button><button class="btn btn-primary"
+                    id="save-customer-btn">Save</button></div>
         </div>
     </div>
-
-    <!-- Modal for Category Management -->
-    <div id="categoryModal" class="modal-overlay">
-        <div class="modal" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2>Manage Categories</h2>
-                <button onclick="closeModal('categoryModal')"
-                    style="background:none; border:none; color:white; cursor:pointer;"><i data-lucide="x"></i></button>
+    <div id="inventory-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="inventory-modal-title">Add Item</h3>
+            <div class="form-group"><label>Item Name</label><input type="text" id="item-name" class="form-control">
             </div>
-            <div class="form-group" style="display: flex; gap: 10px; margin-bottom: 1.5rem; margin-top: 1rem;">
-                <input type="text" id="new-category-input" placeholder="New category name..." style="flex: 1;">
-                <button class="btn btn-primary" onclick="addCategory()">Add</button>
+            <div class="form-group"><label>Price</label><input type="number" id="item-price" class="form-control">
             </div>
-            <div id="category-list"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
-                <!-- Categories will be injected here -->
-            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;"><button class="btn"
+                    style="background: #444;" onclick="closeModals()">Cancel</button><button class="btn btn-primary"
+                    id="save-item-btn">Save</button></div>
         </div>
     </div>
+    <!-- Hidden Print Area -->
+    <div id="print-area">
+        <div class="invoice-header" style="margin-bottom: 0px; text-align: center;">
+            <img id="print-logo-img" src="logo_cinv.png" alt="Haraz Coffee House"
+                style="width: 280px; max-width: none; height: auto; display: inline-block;">
+        </div>
+        <div class="customer-section"
+            style="margin-top: 30px; display: flex; justify-content: space-between; align-items: flex-end; color: #000;">
+            <div>
+                <p style="margin: 5px 0; font-weight: bold;">Client: <span id="print-cust-name">Customer
+                        Name</span></p>
+                <p style="margin: 5px 0;"><span id="print-cust-phone">Customer phone number</span></p>
+            </div>
+            <div style="text-align: right;">
+                <p style="margin: 5px 0; font-weight: bold;">Invoice No: <span id="print-invoice-id">INV-000000</span>
+                </p>
+                <p style="margin: 5px 0;">Date: <span id="print-date">01/01/2026</span></p>
+            </div>
+        </div>
+        <div style="border-top: 2px dashed #000; margin: 15px 0; width: 100%;"></div>
+        <table class="invoice-table" style="color: #000; width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 5%;">
+                        No. </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 45%;">
+                        Name </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 10%;">
+                        Qty. </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 20%;">
+                        Price </th>
+                    <th style="text-align: left; border-bottom: 2px solid #000; padding: 10px 5px; width: 20%;">
+                        Total </th>
+                </tr>
+            </thead>
+            <tbody id="print-items-body"></tbody>
+        </table>
+        <div class="invoice-footer"
+            style="margin-top: 50px; text-align: right; border-top: 2px dashed #000; padding-top: 20px; color: #000;">
+            <p style="margin: 10px 0;">Delivery Charges : <span id="print-delivery">$0.00</span></p>
+            <div style="font-size: 18pt; font-weight: bold; margin-top: 10px;">Total Payable : <span
+                    id="print-grand-total">$0.00</span></div>
+        </div>
+    </div>
+    <div id="sync-status"
+        style="position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; display: none; z-index: 10000;">
+        <i class="fas fa-sync fa-spin"></i>Syncing...
+    </div>
+    <script> // PWA Service Worker Registration
 
-    <!-- Notification Toast -->
-    <div id="notification-toast"></div>
-
-    <script>
-        // --- Image Storage (IndexedDB) ---
-        const DB_NAME = "HarazImagesDB";
-        const STORE_NAME = "product_images";
-        let db;
-
-        const initDB = () => {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, 1);
-                request.onupgradeneeded = (e) => {
-                    const db = e.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        db.createObjectStore(STORE_NAME);
-                    }
-                };
-                request.onsuccess = (e) => {
-                    db = e.target.result;
-                    resolve(db);
-                };
-                request.onerror = (e) => reject(e);
-            });
-        };
-
-        const storeImage = (id, dataUrl) => {
-            return new Promise((resolve) => {
-                const tx = db.transaction(STORE_NAME, "readwrite");
-                const store = tx.objectStore(STORE_NAME);
-                store.put(dataUrl, id.toString());
-                tx.oncomplete = () => resolve();
-            });
-        };
-
-        const getImage = (id) => {
-            return new Promise((resolve) => {
-                const tx = db.transaction(STORE_NAME, "readonly");
-                const store = tx.objectStore(STORE_NAME);
-                const request = store.get(id.toString());
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => resolve(null);
-            });
-        };
-
-        const deleteImage = (id) => {
-            return new Promise((resolve) => {
-                const tx = db.transaction(STORE_NAME, "readwrite");
-                const store = tx.objectStore(STORE_NAME);
-                store.delete(id.toString());
-                tx.oncomplete = () => resolve();
-            });
-        };
-
-        // Data State
-        let inventory = JSON.parse(localStorage.getItem('haraz_inventory')) || [
-            { id: 1, name: 'Whole Milk', category: 'Dairy', stock: 24, unit: 'Liters', min: 10, supplier: 'Local Dairy', link: '', usageDays: 3, price: 1.50 },
-            { id: 2, name: 'Espresso Beans', category: 'Coffee Beans', stock: 12, unit: 'kg', min: 8, supplier: 'Global Roasters', link: '', usageDays: 7, price: 35.00 },
-            { id: 3, name: 'Sugar', category: 'Packaging', stock: 50, unit: 'kg', min: 20, supplier: 'Wholesale Mart', link: '', usageDays: 14, price: 1.20 }
-        ];
-
-        let history = JSON.parse(localStorage.getItem('haraz_history')) || [
-            { id: 101, date: '2026-01-10', item: 'Whole Milk', qty: 12, price: 1.50, supplier: 'Local Dairy' },
-            { id: 102, date: '2026-01-12', item: 'Espresso Beans', qty: 5, price: 35.00, supplier: 'Global Roasters' }
-        ];
-
-        let settings = JSON.parse(localStorage.getItem('haraz_settings')) || {
-            budget: 1000,
-            spend: 193,
-            threshold: 20,
-            email: 'admin@harazcoffee.com',
-            categories: ['Dairy', 'Coffee Beans', 'Syrups', 'Packaging', 'Cleaning']
-        };
-        // Ensure categories exist even if settings were partially saved
-        if (!settings.categories) settings.categories = ['Dairy', 'Coffee Beans', 'Syrups', 'Packaging', 'Cleaning'];
-
-        let orders = JSON.parse(localStorage.getItem('haraz_orders')) || [];
-
-        // UI Charts Variables
-        let usageChart, priceChart;
-
-        // Initialization
-        window.onload = async () => {
-            await initDB();
-            lucide.createIcons();
-            updateDashboard();
-
-            // Check initial online status
-            if (!navigator.onLine) {
-                setCloudStatus('offline', 'No Internet');
-            }
-
-            // Auto-sync on load
-            await pullFromCloud(true); // true means silent pull without confirmation
-        };
-
-        window.addEventListener('online', () => pullFromCloud(true));
-        window.addEventListener('offline', () => setCloudStatus('offline', 'No Internet'));
-
-        // Utility: Save All Data
-        function saveData(skipCloud = false) {
-            updateDashboard(); // Ensure calculated fields are up to date before saving
-            localStorage.setItem('haraz_inventory', JSON.stringify(inventory));
-            localStorage.setItem('haraz_history', JSON.stringify(history));
-            localStorage.setItem('haraz_settings', JSON.stringify(settings));
-            localStorage.setItem('haraz_orders', JSON.stringify(orders));
-
-            // Auto-push to cloud with debounce
-            if (!skipCloud) {
-                debouncePush();
-            }
-        }
-
-        let pushTimeout;
-        function debouncePush() {
-            clearTimeout(pushTimeout);
-            pushTimeout = setTimeout(() => {
-                pushToCloud(true); // true means silent push
-            }, 5000); // 5 second debounce to avoid hitting GitHub limits on rapid edits
-        }
-
-        // Navigation
-        function showSection(sectionId, element) {
-            // Update page content
-            document.querySelectorAll('.section').forEach(s => {
-                s.style.display = 'none';
-                s.classList.remove('active');
-            });
-            const activeSection = document.getElementById(sectionId);
-            if (activeSection) {
-                activeSection.style.display = 'block';
-                setTimeout(() => activeSection.classList.add('active'), 10);
-            }
-
-            // Sync all navigation items (Sidebar and Mobile)
-            document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(item => {
-                const itemOnClick = item.getAttribute('onclick') || '';
-                if (itemOnClick.includes(`'${sectionId}'`)) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-
-            const titles = {
-                dashboard: "Dashboard",
-                inventory: "Inventory Management",
-                stocktake: "Stock Audit",
-                procurement: "Smart Procurement",
-                analytics: "Purchase History",
-                settings: "Settings"
-            };
-            if (titles[sectionId]) {
-                document.getElementById('view-title').innerText = titles[sectionId];
-            }
-
-            if (sectionId === 'inventory') renderInventory();
-            if (sectionId === 'stocktake') renderStockTake();
-            if (sectionId === 'procurement') generateDraftOrders();
-            if (sectionId === 'analytics') renderAnalytics();
-            if (sectionId === 'settings') syncSettingsUI();
-
-            // Scroll to top on section change
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Navigation Helper for internal clicks
-        function navigateToSection(sectionId) {
-            const isMobile = window.innerWidth <= 768;
-            const selector = isMobile ? `.mobile-nav-item[onclick*="${sectionId}"]` : `.nav-links .nav-item[onclick*="${sectionId}"]`;
-            const navItem = document.querySelector(selector);
-            if (navItem) {
-                showSection(sectionId, navItem);
-            }
-        }
-
-        function handleNotificationClick() {
-            const lowStockCount = inventory.filter(i => i.stock <= i.min).length;
-            if (lowStockCount > 0) {
-                navigateToSection('procurement');
-            } else {
-                showToast("No active alerts.");
-            }
-        }
-
-        // Dashboard Functions
-        function updateDashboard() {
-            // Calculate spend dynamically from history and orders for the current month
-            const now = new Date();
-            const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`; // "YYYY-MM" local
-
-            const historySpend = history
-                .filter(h => h.date && h.date.startsWith(currentMonth))
-                .reduce((sum, h) => sum + (h.qty * h.price), 0);
-
-            const ordersSpend = orders
-                .filter(o => o.date && o.date.startsWith(currentMonth))
-                .reduce((sum, o) => sum + (o.cost || 0), 0);
-
-            settings.spend = historySpend + ordersSpend;
-
-            const lowStockCount = inventory.filter(i => i.stock <= i.min).length;
-            document.getElementById('stat-total-items').innerText = inventory.length;
-            document.getElementById('stat-low-stock').innerText = lowStockCount;
-            document.getElementById('stat-month-spend').innerText = `$ ${settings.spend.toLocaleString()}`;
-
-            // Pending Orders
-            document.getElementById('stat-pending-orders').innerText = orders.length;
-
-            // Budget Progress
-            const progress = (settings.budget > 0) ? (settings.spend / settings.budget) * 100 : 0;
-            const bar = document.getElementById('budget-progress');
-            bar.style.width = `${Math.min(progress, 100)}%`;
-            document.getElementById('budget-text').innerText = `$ ${settings.spend.toFixed(0)} / ${settings.budget.toFixed(0)}`;
-
-            if (progress > 90) bar.style.background = 'var(--danger)';
-            else if (progress > 75) bar.style.background = 'var(--warning)';
-            else bar.style.background = 'var(--secondary)';
-
-            // Alerts
-            renderDashboardAlerts();
-            initDashboardCharts();
-
-            if (lowStockCount > 0) {
-                document.getElementById('notification-dot').style.display = 'block';
-            } else {
-                document.getElementById('notification-dot').style.display = 'none';
-            }
-        }
-
-        function renderDashboardAlerts() {
-            const container = document.getElementById('dashboard-alerts');
-            container.innerHTML = '';
-
-            inventory.forEach(i => {
-                if (i.stock <= i.min) {
-                    container.innerHTML += `
-                        <div style="background: rgba(255, 77, 77, 0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255, 77, 77, 0.2); display: flex; align-items: center; gap: 10px;">
-                            <i data-lucide="alert-circle" style="color: var(--danger); width: 18px;"></i>
-                            <div style="flex:1">
-                                <p style="font-size: 0.9rem; font-weight: 600;">${i.name} Critical!</p>
-                                <p style="font-size: 0.75rem; color: var(--text-dim);">Balance: ${i.stock} ${i.unit}</p>
-                            </div>
-                            <button class="btn btn-primary" style="padding: 4px 10px; font-size: 0.7rem;" onclick="showSection('procurement', document.querySelector('.nav-item:nth-child(4)')); generateDraftOrders();">Order</button>
-                        </div>
-                    `;
-                } else {
-                    const consumptionPerDay = i.min / i.usageDays;
-                    const daysRemaining = Math.floor(i.stock / (consumptionPerDay || 1));
-                    if (daysRemaining <= 3) {
-                        container.innerHTML += `
-                            <div style="background: rgba(255, 171, 0, 0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255, 171, 0, 0.2); display: flex; align-items: center; gap: 10px;">
-                                <i data-lucide="clock" style="color: var(--warning); width: 18px;"></i>
-                                <div style="flex:1">
-                                    <p style="font-size: 0.9rem; font-weight: 600;">Usage Alert: ${i.name}</p>
-                                    <p style="font-size: 0.75rem; color: var(--text-dim);">Est. ${daysRemaining} days left.</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-            });
-            lucide.createIcons();
-        }
-
-        // Inventory Functions
-        async function renderInventory(filterText = '') {
-            const tbody = document.getElementById('inventory-table-body');
-            tbody.innerHTML = '';
-
-            const filteredItems = inventory.filter(i => i.name.toLowerCase().includes(filterText.toLowerCase()));
-
-            // Optimization: Fetch all images in parallel
-            const itemsWithImages = await Promise.all(filteredItems.map(async (item) => {
-                const imgData = await getImage(item.id);
-                return { ...item, imgData };
-            }));
-
-            for (const item of itemsWithImages) {
-                const isLow = item.stock <= item.min;
-                const tr = document.createElement('tr');
-                tr.className = 'item-row';
-                tr.id = `item-row-${item.id}`;
-                tr.innerHTML = `
-                        <td>
-                            <div style="width: 40px; height: 40px; background: var(--glass-bg); border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-border);">
-                                ${item.imgData ? `<img src="${item.imgData}" style="width: 100%; height: 100%; object-fit: cover;">` : '<i data-lucide="image" style="width: 16px; color: var(--text-dim);"></i>'}
-                            </div>
-                        </td>
-                        <td style="font-weight: 600;">${item.name}</td>
-                        <td style="color: var(--text-dim);">${item.category}</td>
-                        <td>
-                            <div class="counter">
-                                <button class="counter-btn" onclick="adjustStock('${item.id}', -1)">-</button>
-                                <input type="number" step="0.01" 
-                                    style="width: 60px; background: transparent; border: 1px solid var(--glass-border); color: white; text-align: center; font-weight: bold; border-radius: 4px;" 
-                                    value="${item.stock}" 
-                                    onchange="updateItemStock('${item.id}', this.value)">
-                                <button class="counter-btn" onclick="adjustStock('${item.id}', 1)">+</button>
-                            </div>
-                        </td>
-                        <td>${item.unit}</td>
-                        <td>
-                            <span class="badge ${isLow ? 'badge-danger' : 'badge-success'}">${isLow ? 'Low' : 'OK'}</span>
-                        </td>
-                        <td>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-outline" style="padding: 6px;" onclick="editItem('${item.id}')">
-                                    <i data-lucide="edit-2" style="width: 14px;"></i>
-                                </button>
-                                <button class="btn btn-outline" style="padding: 6px; color: var(--danger); border-color: var(--danger);" onclick="deleteItem('${item.id}')">
-                                    <i data-lucide="trash-2" style="width: 14px;"></i>
-                                </button>
-                            </div>
-                        </td>
-                `;
-                tbody.appendChild(tr);
-            }
-            lucide.createIcons();
-        }
-
-        function getStockStatus(item) {
-            const stock = parseFloat(item.stock) || 0;
-            const min = parseFloat(item.min) || 0;
-            if (stock <= min) return { color: 'var(--danger)', label: 'Critical' };
-            if (stock <= min * 1.5) return { color: 'var(--warning)', label: 'Watch' };
-            return { color: 'var(--success)', label: 'Healthy' };
-        }
-
-        function adjustStock(id, amount) {
-            const item = inventory.find(i => i.id == id);
-            if (item) {
-                item.stock = parseFloat((item.stock + amount).toFixed(2));
-                if (item.stock < 0) item.stock = 0;
-                saveData();
-                renderInventory();
-            }
-        }
-
-        function updateItemStock(id, val) {
-            const item = inventory.find(i => i.id == id);
-            if (item) {
-                item.stock = parseFloat(parseFloat(val).toFixed(2)) || 0;
-                saveData();
-                renderInventory();
-            }
-        }
-
-        function filterInventory(val) {
-            renderInventory(val);
-        }
-
-        // Stock Take Functions
-        function renderStockTake() {
-            const grid = document.getElementById('stock-take-grid');
-            grid.innerHTML = '';
-            inventory.forEach(item => {
-                grid.innerHTML += `
-                    <div class="stock-item-card">
-                        <div style="display: flex; justify-content: space-between;">
-                            <h3>${item.name}</h3>
-                            <span style="color: var(--text-dim); font-size: 0.8rem;">Expect: ${item.stock}</span>
-                        </div>
-                        <input type="number" step="0.01" class="daily-input" data-id="${item.id}" placeholder="Enter Actual Qty">
-                    </div>
-                `;
-            });
-        }
-
-        function processStockTake() {
-            const inputs = document.querySelectorAll('.daily-input');
-            let count = 0;
-            inputs.forEach(input => {
-                const val = parseFloat(input.value);
-                if (!isNaN(val)) {
-                    const id = input.dataset.id;
-                    const item = inventory.find(i => i.id == id);
-                    if (item) {
-                        item.stock = val;
-                        count++;
-                    }
-                }
-            });
-            if (count > 0) {
-                saveData();
-                pushToCloud(true); // Immediate upload after audit
-                showToast(`Audit saved for ${count} items.`);
-                showSection('dashboard', document.querySelector('.nav-item:first-child'));
-            } else {
-                alert("Please enter at least one quantity.");
-            }
-        }
-
-        // Procurement Functions
-        function generateDraftOrders() {
-            const container = document.getElementById('draft-orders-container');
-            container.innerHTML = '';
-
-            const lowItems = inventory.filter(item => {
-                const isAlreadyOrdered = orders.some(o => o.itemId == item.id);
-                return item.stock <= item.min && !isAlreadyOrdered;
-            });
-
-            if (lowItems.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-dim); padding: 3rem;">No orders required. All stock levels are sufficient.</p>';
-                return;
-            }
-
-            lowItems.forEach(item => {
-                const orderQty = Math.ceil(item.min * 2 - item.stock);
-                const totalCost = orderQty * item.price;
-
-                container.innerHTML += `
-                    <div class="card animated">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                            <h3>${item.name}</h3>
-                            <span class="badge badge-danger">Restock</span>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 1rem;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span>Order Quantity:</span>
-                                <b>${orderQty} ${item.unit}</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>Estimated Cost:</span>
-                                <b style="color: var(--secondary);">$ ${totalCost.toFixed(2)}</b>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-primary" style="flex: 1;" onclick="completePurchase(${item.id}, ${orderQty}, ${totalCost})">Have Placed Order</button>
-                            ${item.link ? `<a href="${item.link}" target="_blank" class="btn btn-outline"><i data-lucide="external-link"></i></a>` : ''}
-                        </div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function completePurchase(id, defaultQty, cost) {
-            const item = inventory.find(i => i.id == id);
-
-            const userQty = prompt(`Enter quantity to order for ${item.name} (${item.unit}):`, defaultQty);
-            if (userQty === null) return; // Cancelled
-
-            const qty = parseFloat(userQty);
-            if (isNaN(qty) || qty <= 0) {
-                alert("Please enter a valid quantity.");
-                return;
-            }
-
-            const finalCost = qty * item.price;
-
-            if (confirm(`Place order for ${qty} ${item.unit} of ${item.name} for $${finalCost.toFixed(2)}?`)) {
-                // Add to orders instead of immediate stock update
-                orders.unshift({
-                    id: Date.now(),
-                    date: new Date().toISOString().split('T')[0],
-                    itemId: item.id,
-                    itemName: item.name,
-                    qty: qty,
-                    price: item.price,
-                    cost: finalCost,
-                    unit: item.unit,
-                    supplier: item.supplier
-                });
-
-                saveData();
-                generateDraftOrders();
-                showToast("Order placed and tracking started.");
-            }
-        }
-
-        function receiveOrder(orderId) {
-            const orderIndex = orders.findIndex(o => o.id == orderId);
-            if (orderIndex === -1) return;
-
-            const order = orders[orderIndex];
-            const item = inventory.find(i => i.id == order.itemId);
-
-            if (confirm(`Mark shipment for ${order.itemName} (${order.qty} ${order.unit}) as received? Stock will be updated.`)) {
-                if (item) {
-                    item.stock += order.qty;
-                }
-
-                // Add to history
-                history.unshift({
-                    id: order.id,
-                    date: order.date,
-                    receivedDate: new Date().toISOString().split('T')[0],
-                    item: order.itemName,
-                    qty: order.qty,
-                    price: order.price,
-                    supplier: order.supplier
-                });
-
-                // Remove from active orders
-                orders.splice(orderIndex, 1);
-
-                saveData();
-                generateDraftOrders();
-                showToast("Delivery received and stock updated!");
-            }
-        }
-
-        function renderPendingOrders() {
-            const container = document.getElementById('pending-orders-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            if (orders.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-dim); padding: 2rem;">No shipments currently in transit.</p>';
-                return;
-            }
-
-            orders.forEach(order => {
-                container.innerHTML += `
-                    <div class="card animated" style="border-left: 4px solid var(--warning); height: auto;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                            <h3 style="font-size: 1.1rem;">In Transit: ${order.itemName}</h3>
-                            <span class="badge badge-warning">Pending</span>
-                        </div>
-                        <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 1rem;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.85rem;">
-                                <span>Ordered On:</span>
-                                <b>${order.date}</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.85rem;">
-                                <span>Quantity:</span>
-                                <b>${order.qty} ${order.unit}</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
-                                <span>Supplier:</span>
-                                <b>${order.supplier}</b>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; background: linear-gradient(135deg, var(--success), #00c853);" onclick="receiveOrder(${order.id})">
-                            <i data-lucide="package-check" style="width: 18px;"></i> Mark as Received
-                        </button>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        // Wrap original generateDraftOrders to also call renderPendingOrders
-        const originalGenerateDraftOrders = generateDraftOrders;
-        generateDraftOrders = function () {
-            originalGenerateDraftOrders();
-            renderPendingOrders();
-        };
-
-        // Analytics Functions
-        function renderAnalytics() {
-            const tbody = document.getElementById('purchase-history-body');
-            tbody.innerHTML = '';
-
-            history.slice(0, 10).forEach(h => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${h.date}</td>
-                        <td style="font-weight: 600;">${h.item}</td>
-                        <td style="color: var(--text-dim);">${h.supplier}</td>
-                        <td>${h.qty}</td>
-                        <td>$ ${(h.qty * h.price).toFixed(2)}</td>
-                        <td>
-                            <button class="btn btn-outline" style="padding: 6px; color: var(--danger); border-color: var(--danger);" onclick="deleteHistoryEntry(${h.id})">
-                                <i data-lucide="trash-2" style="width: 14px;"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function deleteHistoryEntry(id) {
-            if (confirm("Delete this purchase history entry? This will not affect current stock.")) {
-                const index = history.findIndex(h => h.id === id);
-                if (index !== -1) {
-                    history.splice(index, 1);
-                    saveData();
-                    pushToCloud(true); // Immediate upload after deletion
-                    renderAnalytics();
-                }
-            }
-        }
-
-        // Charts Logic
-        let charts = {};
-        function initDashboardCharts() {
-            // Cleanup existing charts
-            Object.values(charts).forEach(c => c && typeof c.destroy === 'function' && c.destroy());
-            charts = {};
-
-            // 1. Inventory Health (Grouped Bar)
-            const healthCtx = document.getElementById('healthChart');
-            if (healthCtx) {
-                const labels = inventory.map(i => i.name).slice(0, 10);
-                const stockData = inventory.map(i => i.stock).slice(0, 10);
-                const minData = inventory.map(i => i.min).slice(0, 10);
-
-                charts.health = new Chart(healthCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            { label: 'Current Stock', data: stockData, backgroundColor: '#d4af37' },
-                            { label: 'Min Level', data: minData, backgroundColor: 'rgba(255, 255, 255, 0.1)' }
-                        ]
-                    },
-                    options: {
-                        indexAxis: 'x',
-                        plugins: { legend: { display: true, labels: { color: '#f5f5f5' } } },
-                        scales: {
-                            x: { ticks: { color: '#b3b3b3' }, grid: { display: false } },
-                            y: { ticks: { color: '#b3b3b3' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                        }
-                    }
-                });
-            }
-
-            // 2. Items Requiring Reorder (Horizontal Bar)
-            const reorderCtx = document.getElementById('reorderChart');
-            if (reorderCtx) {
-                const reorderItems = inventory.filter(i => i.stock <= i.min).sort((a, b) => (a.stock / a.min) - (b.stock / b.min));
-                const labels = reorderItems.map(i => i.name).slice(0, 8);
-                const data = reorderItems.map(i => i.stock).slice(0, 8);
-
-                charts.reorder = new Chart(reorderCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{ label: 'Stock Level', data: data, backgroundColor: '#ff4d4d' }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { ticks: { color: '#b3b3b3' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                            y: { ticks: { color: '#b3b3b3' }, grid: { display: false } }
-                        }
-                    }
-                });
-            }
-
-            // 3. Category Distribution (Pie)
-            const catCtx = document.getElementById('categoryChart');
-            if (catCtx) {
-                const cats = {};
-                inventory.forEach(i => cats[i.category] = (cats[i.category] || 0) + 1);
-
-                charts.category = new Chart(catCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: Object.keys(cats),
-                        datasets: [{
-                            data: Object.values(cats),
-                            backgroundColor: ['#5c4033', '#d4af37', '#a67c52', '#00e676', '#ffab00', '#ff4d4d']
-                        }]
-                    },
-                    options: {
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: '#f5f5f5', padding: 20 } }
-                        }
-                    }
-                });
-            }
-
-            // 4. Supplier Reliance (Stacked Bar)
-            const supplierCtx = document.getElementById('supplierChart');
-            if (supplierCtx) {
-                const res = {};
-                inventory.forEach(i => {
-                    if (!res[i.supplier]) res[i.supplier] = { count: 0, value: 0 };
-                    res[i.supplier].count++;
-                    res[i.supplier].value += (i.stock * i.price);
-                });
-
-                charts.supplier = new Chart(supplierCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(res),
-                        datasets: [
-                            { label: 'Total Value ($)', data: Object.values(res).map(v => v.value), backgroundColor: '#a67c52' },
-                            { label: 'Item Variation', data: Object.values(res).map(v => v.count), backgroundColor: '#d4af37' }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            x: { stacked: true, ticks: { color: '#b3b3b3' } },
-                            y: { stacked: true, ticks: { color: '#b3b3b3' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                        },
-                        plugins: { legend: { labels: { color: '#f5f5f5' } } }
-                    }
-                });
-            }
-
-            // 5. Stock Level Heatmap
-            const heatmap = document.getElementById('stock-heatmap');
-            if (heatmap) {
-                heatmap.innerHTML = '';
-                (async () => {
-                    // Optimized: Fetch all heatmap images in parallel
-                    const itemsWithImages = await Promise.all(inventory.map(async (i) => {
-                        const imgData = await getImage(i.id);
-                        return { ...i, imgData };
-                    }));
-
-                    for (const i of itemsWithImages) {
-                        const status = getStockStatus(i);
-                        const cell = document.createElement('div');
-                        cell.className = 'heatmap-cell';
-                        cell.style.background = status.color;
-                        cell.style.border = `1px solid ${status.color}`;
-                        cell.title = `${i.name}: ${i.stock} ${i.unit}`;
-                        cell.innerHTML = `
-                            ${i.imgData ? `<img src="${i.imgData}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; margin-bottom: 2px;">` : ''}
-                            <div style="font-size: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${i.name}</div>
-                            <div style="font-size: 0.7rem;">${Math.round(i.stock)}</div>
-                        `;
-                        heatmap.appendChild(cell);
-                    }
-                })();
-            }
-        }
-
-
-        // Settings Functions
-        function updateSettings() {
-            settings.budget = parseFloat(document.getElementById('setting-budget').value) || 0;
-            settings.threshold = parseFloat(document.getElementById('setting-threshold').value) || 20;
-            settings.email = document.getElementById('setting-email').value;
-            saveData();
-            showToast("Settings updated.");
-        }
-
-        function syncSettingsUI() {
-            document.getElementById('setting-budget').value = settings.budget;
-            document.getElementById('setting-threshold').value = settings.threshold;
-            document.getElementById('setting-email').value = settings.email;
-            document.getElementById('setting-github-token').value = localStorage.getItem('haraz_github_token') || '';
-            renderCategorySettings();
-        }
-
-        function renderCategorySettings() {
-            const container = document.getElementById('category-list');
-            if (!container) return;
-            container.innerHTML = '';
-
-            settings.categories.forEach(cat => {
-                const item = document.createElement('div');
-                item.style = "background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border);";
-                item.innerHTML = `
-                    <span style="font-weight: 500;">${cat}</span>
-                    <div style="display: flex; gap: 5px;">
-                        <button class="btn btn-outline" style="padding: 4px; border-color: transparent;" onclick="editCategory('${cat}')">
-                            <i data-lucide="edit-2" style="width: 14px;"></i>
-                        </button>
-                        <button class="btn btn-outline" style="padding: 4px; color: var(--danger); border-color: transparent;" onclick="deleteCategory('${cat}')">
-                            <i data-lucide="x" style="width: 14px;"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-            lucide.createIcons();
-        }
-
-        function addCategory() {
-            const input = document.getElementById('new-category-input');
-            const val = input.value.trim();
-            if (val && !settings.categories.includes(val)) {
-                settings.categories.push(val);
-                input.value = '';
-                saveData();
-                renderCategorySettings();
-                showToast(`Category "${val}" added.`);
-            }
-        }
-
-        function editCategory(oldCat) {
-            const newCat = prompt("Rename category:", oldCat);
-            if (newCat && newCat.trim() !== "" && newCat !== oldCat) {
-                const trimmedNewCat = newCat.trim();
-
-                if (settings.categories.includes(trimmedNewCat)) {
-                    alert("A category with this name already exists.");
-                    return;
-                }
-
-                // Update settings
-                const index = settings.categories.indexOf(oldCat);
-                if (index !== -1) {
-                    settings.categories[index] = trimmedNewCat;
-                }
-
-                // Update all items in inventory that use this category
-                inventory.forEach(item => {
-                    if (item.category === oldCat) {
-                        item.category = trimmedNewCat;
-                    }
-                });
-
-                saveData();
-                renderCategorySettings();
-                showToast(`Category renamed to "${trimmedNewCat}". Items updated.`);
-            }
-        }
-
-        function deleteCategory(cat) {
-            if (confirm(`Delete category "${cat}"? Items in this category will remain, but the category won't be available for new items.`)) {
-                settings.categories = settings.categories.filter(c => c !== cat);
-                saveData();
-                renderCategorySettings();
-            }
-        }
-
-        function saveGithubToken() {
-            const token = document.getElementById('setting-github-token').value.trim();
-            if (token) {
-                localStorage.setItem('haraz_github_token', token);
-                showToast("GitHub Token saved securely.");
-            } else {
-                showToast("Please enter a valid token.");
-            }
-        }
-
-        function resetSystem() {
-            if (confirm("Are you sure? This will delete all your local data!")) {
-                localStorage.clear();
-                window.location.reload();
-            }
-        }
-
-        // Modal Logic
-        async function openModal(id, itemId = null) {
-            document.getElementById(id).style.display = 'flex';
-            currentProcessedImage = null;
-            document.getElementById('image-preview-container').innerHTML = '<span style="font-size: 0.6rem; color: var(--text-dim);">No Image</span>';
-
-            // Populate category dropdown
-            const catSelect = document.getElementById('new-item-category');
-            if (catSelect) {
-                catSelect.innerHTML = settings.categories.map(c => `<option>${c}</option>`).join('');
-            }
-
-            // Sync settings UI with state
-            if (id === 'settings') {
-                syncSettingsUI();
-            }
-
-            if (id === 'categoryModal') {
-                renderCategorySettings();
-            }
-
-            if (itemId) {
-                const item = inventory.find(i => i.id == itemId);
-                document.getElementById('modal-title').innerText = "Edit Item";
-                document.getElementById('edit-item-id').value = item.id;
-                document.getElementById('new-item-name').value = item.name;
-                document.getElementById('new-item-category').value = item.category;
-                document.getElementById('new-item-stock').value = item.stock;
-                document.getElementById('new-item-unit').value = item.unit;
-                document.getElementById('new-item-min').value = item.min;
-                document.getElementById('new-item-usage').value = item.usageDays;
-                document.getElementById('new-item-supplier').value = item.supplier;
-                document.getElementById('new-item-price').value = item.price;
-                document.getElementById('new-item-link').value = item.link;
-
-                const existingImg = await getImage(item.id);
-                if (existingImg) {
-                    document.getElementById('image-preview-container').innerHTML = `<img src="${existingImg}" style="width:100%; height:100%; object-fit:cover;">`;
-                }
-            } else {
-                document.getElementById('modal-title').innerText = "Add New Item";
-                document.getElementById('add-item-form').reset();
-                document.getElementById('edit-item-id').value = '';
-            }
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function editItem(id) {
-            openModal('addItemModal', id);
-        }
-
-        async function deleteItem(id) {
-            const item = inventory.find(i => i.id == id);
-            if (!item) return;
-
-            if (confirm(`Are you sure you want to delete "${item.name}"? This action cannot be undone.`)) {
-                const index = inventory.findIndex(i => i.id == id);
-                inventory.splice(index, 1);
-                await deleteImage(id); // Remove local image
-                saveData();
-                renderInventory();
-                updateDashboard();
-                showToast(`"${item.name}" has been deleted.`);
-            }
-        }
-
-        let currentProcessedImage = null;
-        function previewImage(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = new Image();
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    const size = 500;
-                    canvas.width = size;
-                    canvas.height = size;
-                    const ctx = canvas.getContext('2d');
-
-                    // Center Crop
-                    let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
-                    const aspect = img.width / img.height;
-                    if (aspect > 1) {
-                        srcW = img.height;
-                        srcX = (img.width - img.height) / 2;
-                    } else {
-                        srcH = img.width;
-                        srcY = (img.height - img.width) / 2;
-                    }
-
-                    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, size, size);
-                    currentProcessedImage = canvas.toDataURL('image/jpeg', 0.7);
-
-                    document.getElementById('image-preview-container').innerHTML = `<img src="${currentProcessedImage}" style="width:100%; height:100%; object-fit:cover;">`;
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        document.getElementById('add-item-form').onsubmit = async function (e) {
-            e.preventDefault();
-            const editId = document.getElementById('edit-item-id').value;
-
-            const itemData = {
-                name: document.getElementById('new-item-name').value,
-                category: document.getElementById('new-item-category').value,
-                stock: parseFloat(document.getElementById('new-item-stock').value) || 0,
-                unit: document.getElementById('new-item-unit').value || '-',
-                min: parseFloat(document.getElementById('new-item-min').value) || 0,
-                usageDays: parseInt(document.getElementById('new-item-usage').value) || 0,
-                supplier: document.getElementById('new-item-supplier').value || '-',
-                price: parseFloat(document.getElementById('new-item-price').value) || 0,
-                link: document.getElementById('new-item-link').value || ''
-            };
-
-            let finalId = editId;
-            if (editId) {
-                const index = inventory.findIndex(i => i.id == editId);
-                inventory[index] = { ...inventory[index], ...itemData };
-                showToast("Item updated.");
-            } else {
-                finalId = Date.now().toString();
-                inventory.push({ id: finalId, ...itemData });
-                showToast("Item added.");
-            }
-
-            if (currentProcessedImage) {
-                await storeImage(finalId, currentProcessedImage);
-            }
-
-            saveData();
-            closeModal('addItemModal');
-            renderInventory();
-            currentProcessedImage = null;
-        };
-
-        // UI Helpers
-        function showToast(msg) {
-            const toast = document.getElementById('notification-toast');
-            toast.innerText = msg;
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display = 'none', 3000);
-        }
-
-        // Cloud Configuration (GitHub)
-        const GITHUB_CONFIG = {
-            owner: "syedahsanzafar",
-            repo: "Haraz_Invoice",
-            path: "Haraz_inv_db.json",
-            branch: "main"
-        };
-
-        function setCloudStatus(type, msg) {
-            const dot = document.getElementById('cloud-status-dot');
-            const text = document.getElementById('cloud-status-text');
-            if (!dot || !text) return;
-
-            dot.className = 'status-dot ' + type;
-            text.innerText = msg;
-
-            if (type === 'offline') {
-                text.style.color = 'var(--danger)';
-            } else if (type === 'online') {
-                text.style.color = 'var(--success)';
-            } else {
-                text.style.color = 'var(--text-main)';
-            }
-        }
-
-        async function pushToCloud(silent = false) {
-            const token = localStorage.getItem('haraz_github_token');
-            if (!token) {
-                if (!silent) showToast("Manual Sync: GitHub Token missing in Settings.");
-                return;
-            }
-
-            if (!silent) showToast("Syncing with GitHub...");
-            setCloudStatus('syncing', 'Uploading...');
-            const data = { inventory, history, settings, orders };
-            const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`;
-
-            try {
-                // 1. Get current file for SHA
-                const getRes = await fetch(apiUrl, {
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-
-                let sha = "";
-                if (getRes.ok) {
-                    const fileData = await getRes.json();
-                    sha = fileData.sha;
-                }
-
-                // 2. Put new content
-                const putRes = await fetch(apiUrl, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify({
-                        message: `System Sync: ${new Date().toLocaleString()}`,
-                        content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-                        sha: sha,
-                        branch: GITHUB_CONFIG.branch
-                    })
-                });
-
-                if (putRes.ok) {
-                    if (!silent) showToast("Cloud database updated!");
-                    console.log("GitHub Sync: Success");
-                    setCloudStatus('online', 'Online');
-                } else {
-                    const err = await putRes.json();
-                    throw new Error(err.message || "GitHub API Error");
-                }
-            } catch (err) {
-                console.error("Cloud Error:", err);
-                if (!silent) showToast("Cloud Sync Failed: " + err.message);
-                setCloudStatus('offline', err.message || 'Sync Failed');
-            }
-        }
-
-        let isSyncing = false;
-        async function pullFromCloud(silent = false) {
-            if (isSyncing) return;
-            if (!navigator.onLine) {
-                setCloudStatus('offline', 'No Internet');
-                return;
-            }
-            if (!silent && !confirm("Overwrite local data with Cloud version? This cannot be undone.")) return;
-            isSyncing = true;
-
-            const token = localStorage.getItem('haraz_github_token');
-            if (!silent) showToast("Fetching from Cloud...");
-            setCloudStatus('syncing', 'Fetching...');
-
-            const apiUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}?ref=${GITHUB_CONFIG.branch}`;
-
-            try {
-                const headers = { 'Accept': 'application/vnd.github.v3+json' };
-                if (token) headers['Authorization'] = `token ${token}`;
-
-                const response = await fetch(apiUrl, { headers });
-
-                if (response.ok) {
-                    const fileData = await response.json();
-                    const content = decodeURIComponent(escape(atob(fileData.content)));
-                    const finalData = JSON.parse(content);
-
-                    // Safety Check: Only pull if the cloud database actually has content 
-                    // or if we are doing a manual (non-silent) pull.
-                    const hasCloudData = finalData.inventory && finalData.inventory.length > 0;
-                    const hasLocalData = inventory && inventory.length > 0;
-
-                    if (hasCloudData || !silent) {
-                        if (finalData.inventory) inventory = finalData.inventory;
-                        if (finalData.history) history = finalData.history;
-                        if (finalData.settings) settings = finalData.settings;
-                        if (finalData.orders) orders = finalData.orders;
-
-                        saveData(true); // Save locally without re-pushing
-                        setCloudStatus('online', 'Online');
-                    } else {
-                        // If cloud is empty and we are silent, we don't overwrite local work
-                        console.log("Cloud Pull: Cloud is empty or uninitialized. Keeping local data.");
-                        setCloudStatus('online', 'Online (Cloud Empty)');
-                    }
-                    if (!silent) {
-                        showToast("Data pulled from Cloud!");
-                        setTimeout(() => window.location.reload(), 1000);
-                    } else {
-                        console.log("Cloud Pull: Success");
-                        updateDashboard();
-                        if (document.getElementById('inventory').style.display === 'block') renderInventory();
-                    }
-                } else {
-                    const err = await response.json();
-                    if (response.status === 404) {
-                        if (!silent) showToast("Database file not found on GitHub. Push first.");
-                        setCloudStatus('offline', 'DB Not Found');
-                    } else if (response.status === 401) {
-                        setCloudStatus('offline', 'Token Invalid');
-                    } else {
-                        throw new Error(err.message || "GitHub Fetch Error");
-                    }
-                }
-            } catch (err) {
-                console.error("Cloud Error:", err);
-                if (!silent) showToast("Pull failed: " + err.message);
-                setCloudStatus('offline', err.message || 'Cloud Error');
-            } finally {
-                isSyncing = false;
-            }
-        }
-
-        function exportToExcel() {
-            const worksheet = XLSX.utils.json_to_sheet(inventory);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory");
-
-            // Format for download
-            XLSX.writeFile(workbook, `Haraz_Inventory_${new Date().toISOString().split('T')[0]}.xlsx`);
-            showToast("Inventory exported to Excel!");
-        }
-
-        function exportData() {
-            const data = JSON.stringify({ inventory, history, settings, orders }, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `haraz_backup_${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (confirm("Replace all current data with the selected file? This will overwrite your local database.")) {
-                        inventory = data.inventory || [];
-                        history = data.history || [];
-                        settings = data.settings || settings;
-                        orders = data.orders || [];
-
-                        saveData();
-                        pushToCloud(true);
-
-                        showToast("Local database restored successfully!");
-                        setTimeout(() => window.location.reload(), 1500);
-                    }
-                } catch (err) {
-                    alert("Error parsing JSON file: " + err.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registered successfully:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
+            navigator.serviceWorker.register('sw.js').then(reg => console.log('Service Worker Registered', reg)).catch(err => console.error('Service Worker Registration Failed', err));
         }
+
+        // Auto-close menu and trigger full screen when a link is clicked on mobile
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.matchMedia("(max-width: 768px)").matches) {
+                    if (typeof closeMobileMenu === 'function') closeMobileMenu();
+                    if (typeof requestFullScreen === 'function') requestFullScreen();
+                }
+            });
+        });
     </script>
+    <script src="logo_data.js"></script>
+    <script src="index.js"></script>
+    <!-- Toast Notification Container (Restored/Ensured) -->
+    <div id="sync-status"
+        style="display: none; position: fixed; top: 20px; right: 20px; padding: 10px 20px; border-radius: 5px; color: white; z-index: 10001; font-weight: 500; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    </div>
+    <!-- Persistent Status Bar -->
+    <div id="app-status-bar"
+        style="position: fixed; bottom: 0; left: 0; right: 0; background: #1f2937; border-top: 1px solid #374151; padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; color: #9ca3af; font-size: 0.85rem; z-index: 10000; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; gap: 20px; align-items: center;"><span id="db-status-indicator"
+                style="display: flex; align-items: center; gap: 6px;"><i class="fas fa-database"
+                    style="color: #10b981;"></i>Local Database: Active </span><span style="opacity: 0.2;">|</span><span
+                id="cloud-status-indicator" style="display: flex; align-items: center; gap: 6px;"><i
+                    class="fas fa-cloud" style="color: #6b7280;"></i>Cloud: Idle </span></div>
+        <div style="font-size: 0.75rem; opacity: 0.7;">Haraz Coffee House System v2.1 </div>
+    </div>
 </body>
 
 </html>
