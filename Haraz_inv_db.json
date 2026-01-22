@@ -535,7 +535,7 @@
     {
       "id": "138",
       "name": "images (6)",
-      "category": "Uncategorized",
+      "category": "General",
       "stock": 0,
       "unit": "pcs",
       "min": 5,
@@ -726,7 +726,7 @@
       "Cleaning",
       "Beverages",
       "Dairy",
-      "Uncategorized",
+      "General",
       "Packaging"
     ]
   },
