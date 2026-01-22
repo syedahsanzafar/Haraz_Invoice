@@ -617,9 +617,7 @@
     "spend": 0,
     "threshold": 20,
     "email": "admin@harazcoffee.com",
-    "categories": [
-      "hello"
-    ]
+    "categories": []
   },
   "orders": []
 }
