@@ -470,7 +470,7 @@
     },
     {
       "id": 1768940439983,
-      "name": "Paper Bags?",
+      "name": "Paper Bags",
       "category": "Packaging",
       "stock": 1,
       "unit": "Boxes",
@@ -478,7 +478,8 @@
       "usageDays": 0,
       "supplier": "-",
       "price": 0,
-      "link": ""
+      "link": "",
+      "packSize": 1
     },
     {
       "id": 1768940578031,
@@ -617,7 +618,11 @@
     "spend": 0,
     "threshold": 20,
     "email": "admin@harazcoffee.com",
-    "categories": []
+    "categories": [
+      "Packaging",
+      "Dairy",
+      "Syrups"
+    ]
   },
   "orders": []
 }
