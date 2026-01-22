@@ -599,7 +599,8 @@
       "usageDays": 0,
       "supplier": "-",
       "price": 0,
-      "link": ""
+      "link": "",
+      "packSize": 1
     }
   ],
   "history": [
