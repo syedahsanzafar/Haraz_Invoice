@@ -1,14 +1,4 @@
 {
-  "customers": [
-    {
-      "name": "John Doe",
-      "phone": "555-0101"
-    },
-    {
-      "name": "Jane Smith",
-      "phone": "555-0202"
-    }
-  ],
   "inventory": [
     {
       "name": "Haraz Latte",
@@ -23,6 +13,12 @@
       "price": 6
     }
   ],
-  "invoices": [],
-  "payments": []
+  "history": [],
+  "settings": {
+    "budget": 10000,
+    "spend": 0,
+    "threshold": 20,
+    "email": "admin@harazcoffee.com"
+  },
+  "orders": []
 }
