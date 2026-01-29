@@ -25,6 +25,10 @@
     {
       "name": "Haraz Dark Roast Beans",
       "price": 210
+    },
+    {
+      "name": "Haraz Medium Roast Beans",
+      "price": 210
     }
   ],
   "invoices": [],
