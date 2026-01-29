@@ -1,4 +1,14 @@
 {
+  "customers": [
+    {
+      "name": "John Doe",
+      "phone": "555-0101"
+    },
+    {
+      "name": "Jane Smith",
+      "phone": "555-0202"
+    }
+  ],
   "inventory": [
     {
       "name": "Haraz Latte",
@@ -11,14 +21,12 @@
     {
       "name": "Mocha",
       "price": 6
+    },
+    {
+      "name": "Haraz Dark Roast Beans",
+      "price": 210
     }
   ],
-  "history": [],
-  "settings": {
-    "budget": 10000,
-    "spend": 0,
-    "threshold": 20,
-    "email": "admin@harazcoffee.com"
-  },
-  "orders": []
+  "invoices": [],
+  "payments": []
 }
