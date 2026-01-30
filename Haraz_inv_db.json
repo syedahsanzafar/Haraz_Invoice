@@ -1,5 +1,10 @@
 {
-  "customers": [],
+  "customers": [
+    {
+      "name": "Haraz Perry Hall",
+      "phone": "410-635-0099"
+    }
+  ],
   "inventory": [
     {
       "name": "Haraz Latte",
@@ -34,6 +39,44 @@
       "price": 15
     }
   ],
-  "invoices": [],
+  "invoices": [
+    {
+      "id": "INV-111637",
+      "date": "1/30/2026",
+      "customer": {
+        "name": "Haraz Perry Hall",
+        "phone": "410-635-0099"
+      },
+      "items": [
+        {
+          "name": "Haraz Medium Roast Beans",
+          "qty": 3,
+          "price": 210,
+          "subtotal": 630
+        },
+        {
+          "name": "Chocolate Chip Cookies",
+          "qty": 96,
+          "price": 2,
+          "subtotal": 192
+        },
+        {
+          "name": "Spinach Puff Pastry",
+          "qty": 45,
+          "price": 3.25,
+          "subtotal": 146.25
+        },
+        {
+          "name": "Haraz Shipping Cost",
+          "qty": 1,
+          "price": 15,
+          "subtotal": 15
+        }
+      ],
+      "delivery": 0,
+      "total": 983.25,
+      "paid": 0
+    }
+  ],
   "payments": []
 }
