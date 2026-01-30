@@ -28,6 +28,10 @@
     {
       "name": "Spinach Puff Pastry",
       "price": 3.5
+    },
+    {
+      "name": "Haraz Shipping Cost",
+      "price": 15
     }
   ],
   "invoices": [],
