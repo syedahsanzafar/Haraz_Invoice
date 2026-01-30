@@ -29,6 +29,10 @@
     {
       "name": "Haraz Medium Roast Beans",
       "price": 210
+    },
+    {
+      "name": "Chocolate Chip Cookies",
+      "price": 2
     }
   ],
   "invoices": [],
