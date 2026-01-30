@@ -33,6 +33,10 @@
     {
       "name": "Chocolate Chip Cookies",
       "price": 2
+    },
+    {
+      "name": "Spinach Puff Pastry",
+      "price": 3.5
     }
   ],
   "invoices": [],
