@@ -37,6 +37,10 @@
     {
       "name": "Haraz Shipping Cost",
       "price": 15
+    },
+    {
+      "name": "Sesame Seeds 10oz",
+      "price": 2.69
     }
   ],
   "invoices": [
