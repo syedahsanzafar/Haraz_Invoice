@@ -49,6 +49,10 @@
     {
       "name": "Instant Dry Yeast 16oz",
       "price": 5.99
+    },
+    {
+      "name": "Unsalted Butter",
+      "price": 2.64
     }
   ],
   "invoices": [
