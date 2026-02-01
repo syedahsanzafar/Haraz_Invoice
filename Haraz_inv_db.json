@@ -53,6 +53,10 @@
     {
       "name": "Unsalted Butter",
       "price": 2.64
+    },
+    {
+      "name": "Cream cheese",
+      "price": 16.08
     }
   ],
   "invoices": [
