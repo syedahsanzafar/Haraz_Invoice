@@ -45,6 +45,10 @@
     {
       "name": "All purpose Flour",
       "price": 8.99
+    },
+    {
+      "name": "Instant Dry Yeast 16oz",
+      "price": 5.99
     }
   ],
   "invoices": [
