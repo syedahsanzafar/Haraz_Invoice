@@ -57,6 +57,10 @@
     {
       "name": "Cream cheese",
       "price": 16.08
+    },
+    {
+      "name": "James Farm Unsalted Butter",
+      "price": 2.65
     }
   ],
   "invoices": [
