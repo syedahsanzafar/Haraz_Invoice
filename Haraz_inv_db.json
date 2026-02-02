@@ -100,6 +100,25 @@
       "delivery": 0,
       "total": 983.25,
       "paid": 0
+    },
+    {
+      "id": "INV-577658",
+      "date": "2/2/2026",
+      "customer": {
+        "name": "Haraz Perry Hall",
+        "phone": "410-635-0099"
+      },
+      "items": [
+        {
+          "name": "Haraz Medium Roast Beans",
+          "qty": 4,
+          "price": 210,
+          "subtotal": 840
+        }
+      ],
+      "delivery": 0,
+      "total": 840,
+      "paid": 0
     }
   ],
   "payments": []
