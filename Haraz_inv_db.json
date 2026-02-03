@@ -3,6 +3,10 @@
     {
       "name": "Haraz Perry Hall",
       "phone": "410-635-0099"
+    },
+    {
+      "name": "Raazia Malik",
+      "phone": "443-319-3368"
     }
   ],
   "inventory": [
@@ -118,6 +122,43 @@
       ],
       "delivery": 0,
       "total": 840,
+      "paid": 0
+    },
+    {
+      "id": "INV-270279",
+      "date": "2/2/2026",
+      "customer": {
+        "name": "Raazia Malik",
+        "phone": "443-319-3368"
+      },
+      "items": [
+        {
+          "name": "Sesame Seeds 10oz",
+          "qty": 1,
+          "price": 2.69,
+          "subtotal": 2.69
+        },
+        {
+          "name": "Instant Dry Yeast 16oz",
+          "qty": 3,
+          "price": 5.99,
+          "subtotal": 17.97
+        },
+        {
+          "name": "Unsalted Butter",
+          "qty": 12,
+          "price": 2.64,
+          "subtotal": 31.68
+        },
+        {
+          "name": "Cream cheese",
+          "qty": 2,
+          "price": 16.08,
+          "subtotal": 32.16
+        }
+      ],
+      "delivery": 0,
+      "total": 84.5,
       "paid": 0
     }
   ],
