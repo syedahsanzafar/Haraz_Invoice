@@ -73,6 +73,10 @@
     {
       "name": "Toast Related Invoice",
       "price": 328
+    },
+    {
+      "name": "Pecan Bar",
+      "price": 60.29
     }
   ],
   "invoices": [
