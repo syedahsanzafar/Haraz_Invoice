@@ -77,6 +77,10 @@
     {
       "name": "Pecan Bar",
       "price": 60.29
+    },
+    {
+      "name": "Sandwiches",
+      "price": 3.25
     }
   ],
   "invoices": [
