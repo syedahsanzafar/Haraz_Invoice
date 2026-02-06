@@ -65,6 +65,10 @@
     {
       "name": "James Farm Unsalted Butter",
       "price": 2.65
+    },
+    {
+      "name": "Green Tea",
+      "price": 18
     }
   ],
   "invoices": [
