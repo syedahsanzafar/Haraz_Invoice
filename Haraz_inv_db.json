@@ -69,6 +69,10 @@
     {
       "name": "Green Tea",
       "price": 18
+    },
+    {
+      "name": "Toast Related Invoice",
+      "price": 328
     }
   ],
   "invoices": [
