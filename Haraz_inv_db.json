@@ -81,6 +81,10 @@
     {
       "name": "Sandwiches",
       "price": 3.25
+    },
+    {
+      "name": "Haraz XL shirt",
+      "price": 20
     }
   ],
   "invoices": [
