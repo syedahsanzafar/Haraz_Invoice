@@ -89,6 +89,10 @@
     {
       "name": "Trash Bag Box",
       "price": 27
+    },
+    {
+      "name": "Mosaic Cake",
+      "price": 35
     }
   ],
   "invoices": [
